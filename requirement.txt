@@ -1,0 +1,11 @@
+socksio
+tiktoken
+openai
+zhipuai
+google-generativeai
+anthropic
+qianfan
+dashscope
+spark_ai_python
+sensenova
+reka-api

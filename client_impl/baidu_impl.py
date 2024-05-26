@@ -1,0 +1,73 @@
+
+
+import os
+import time
+
+import llm_client_base
+
+# pip install qianfan
+import qianfan
+
+# config from .env
+# QIANFAN_ACCESS_KEY
+# QIANFAN_SECRET_KEY
+
+
+class Baidu_Client(llm_client_base.LlmClientBase):
+    def __init__(self):
+        super().__init__()
+
+    async def chat_stream_async(self, model_name, history, temperature, force_calc_token_num):
+        start_time = time.time()
+        chat_comp = qianfan.ChatCompletion(model=model_name)
+        resp = await chat_comp.ado(messages=history, temperature=temperature, stream=True)
+
+        result_buffer = ''
+        usage = None
+        role = 'assistant'
+        response_headers = None
+        first_token_time = None
+
+        async for chunk_resp in resp:
+            chunk = chunk_resp.body
+            usage = chunk['usage']
+            response_headers = chunk_resp.headers
+            result_buffer += chunk['result']
+            if chunk['result'] and first_token_time is None:
+                first_token_time = time.time()
+
+            yield {
+                'role': role,
+                'delta_content': chunk['result'],
+                'accumulated_content': result_buffer,
+            }
+
+        completion_time = time.time()
+
+        rate_limit_info = {k[2:]: v for k, v in response_headers.items() if k.startswith('X-Ratelimit')}
+
+        yield {
+            'role': role,
+            'accumulated_content': result_buffer,
+            'finish_reason': 0,
+            'usage': usage,
+            'rate_limit_info': rate_limit_info,
+            'first_token_time': first_token_time - start_time,
+            'completion_time': completion_time - start_time,
+        }
+
+
+if __name__ == '__main__':
+    import asyncio
+    import os
+
+    client = Baidu_Client()
+    model_name = "ERNIE-Speed-8K"
+    history = [{"role": "user", "content": "Hello, how are you?"}]
+    temperature = 0.01
+
+    async def main():
+        async for chunk in client.chat_stream_async(model_name, history, temperature, force_calc_token_num=True):
+            print(chunk)
+
+    asyncio.run(main())

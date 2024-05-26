@@ -149,58 +149,9 @@ def test_128k():
             print(f'avg_token_speed: {avg_token_speed}, {token_speed_list}')
 
 
-def test_32k():
-
-    client_factory, model_name = Gemini_Client, "gemini-1.5-flash"
-
-    # client_factory, model_name = OpenAI_Client, "gpt-4o"
-    # client_factory, model_name = OpenAI_Client, "gpt-4-0125-preview"
-    # client_factory, model_name = OpenAI_Client, "gpt-3.5-turbo-0125"
-
-    # client_factory, model_name = Anthropic_Client, "claude-3-sonnet-20240229"
-    # client_factory, model_name = Anthropic_Client, "claude-3-haiku-20240307"
-
-    # client_factory, model_name = Zhipu_Client, "glm-3-turbo"
-
-    # client_factory, model_name = Yi_Client, "yi-medium-200k"
-    # client_factory, model_name = Yi_Client, "yi-spark"
-
-    # client_factory, model_name = Moonshot_Client, "moonshot-v1-128k"
-
-    # client_factory, model_name = Baichuan_Client, "Baichuan3-Turbo"
-    # client_factory, model_name = Baichuan_Client, "Baichuan3-Turbo-128k"
-    # client_factory, model_name = Baichuan_Client, "Baichuan4"
-
-    # client_factory, model_name = StepFun_Client, "step-1-128k"
-
-    # client_factory, model_name = Minimax_Client, "abab6-chat"
-    # client_factory, model_name = Minimax_Client, "abab6.5s-chat"
-
-    # client_factory, model_name = DeepSeek_Client, "deepseek-chat"
-
-    client_factory, model_name = Reka_Client, "reka-core"
-    client_factory, model_name = Reka_Client, "reka-flash"  # failed
-
-    # client_factory, model_name = Alibaba_Client, "qwen-plus"
-    # client_factory, model_name = Alibaba_Client, "qwen-max-longcontext"
-
-    # client_factory, model_name = SenseNova_Client, "SenseChat-32K"  # content blocked
-    # client_factory, model_name = SenseNova_Client, "SenseChat-128K"  # content blocked
-
-    # client_factory, model_name = Baidu_Client, "ERNIE-Speed-128K"  # failed 2 case
-
-    prompt = open('test_case3_32k_sample1.txt', 'r', encoding='utf8').read()
-    result = asyncio.run(run_test(client_factory, model_name, prompt))
-    print('-------------END---------------')
-    # print(result['result'])
-    print(f'usage: {result["usage"]}')
-
-
 if __name__ == '__main__':
     import os
     # os.environ['HTTP_PROXY'] = "http://127.0.0.1:7890/"
     # os.environ['HTTPS_PROXY'] = "http://127.0.0.1:7890/"
 
     test_128k()
-
-    # test_32k()

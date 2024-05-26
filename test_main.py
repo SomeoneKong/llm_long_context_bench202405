@@ -66,8 +66,8 @@ def test_128k():
     # client_factory, model_name = DuckAgi_Client, "claude-3-haiku-20240307"
     # client_factory, model_name = DuckAgi_Client, "claude-3-sonnet-20240229"
 
-    # client_factory, model_name = Reka_Client, "reka-core"
-    # client_factory, model_name = Reka_Client, "reka-flash"
+    client_factory, model_name, gap_time = Reka_Client, "reka-core", 60
+    # client_factory, model_name, gap_time = Reka_Client, "reka-flash", 60
 
     # cohere
     # client_factory, model_name = DuckAgi_Client, "command-r"

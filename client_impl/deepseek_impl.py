@@ -21,7 +21,7 @@ class DeepSeek_Client(OpenAI_Client):
 
     async def chat_stream_async(self, model_name, history, temperature, force_calc_token_num):
         try:
-            async for chunk in super().chat_stream_async(model_name, history, temperature):
+            async for chunk in super().chat_stream_async(model_name, history, temperature, force_calc_token_num):
                 yield chunk
         except openai.BadRequestError as e:
             if 'Content Exists Risk' in e.message:

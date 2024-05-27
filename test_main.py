@@ -66,8 +66,12 @@ def test_128k():
     # client_factory, model_name = DuckAgi_Client, "claude-3-haiku-20240307"
     # client_factory, model_name = DuckAgi_Client, "claude-3-sonnet-20240229"
 
-    # client_factory, model_name = Reka_Client, "reka-core"
-    # client_factory, model_name = Reka_Client, "reka-flash"
+    # client_factory, model_name, gap_time = Reka_Client, "reka-core", 60
+    # client_factory, model_name, gap_time = Reka_Client, "reka-flash", 60
+
+    # cohere
+    # client_factory, model_name = DuckAgi_Client, "command-r"
+    # client_factory, model_name = DuckAgi_Client, "command-r-plus"
 
 
     # client_factory, model_name, gap_time = Zhipu_Client, "glm-3-turbo", 0
@@ -81,7 +85,7 @@ def test_128k():
     # client_factory, model_name, gap_time = Baichuan_Client, "Baichuan4", 60 / 120
 
     # client_factory, model_name, gap_time = StepFun_Client, "step-1-128k", max(60/5000, 60 / (720 / 120))  # V3
-    client_factory, model_name, gap_time = StepFun_Client, "step-1-256k", max(60/5000, 60 / (720 / 120))  # V3
+    # client_factory, model_name, gap_time = StepFun_Client, "step-1-256k", max(60/5000, 60 / (720 / 120))  # V3
 
     # client_factory, model_name, gap_time = Minimax_Client, "abab6.5s-chat", max(60/5000, 60 / (720 / 120))
 

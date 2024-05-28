@@ -97,6 +97,6 @@ Based on the content of the documents above, calculate the value of the var_jupi
     return ''.join(output_lines)
 
 
-base_content = gen_base_content('HarryPotter3.txt', 1024 * 100)
+base_content = gen_base_content('HarryPotter4.txt', 1024 * 24)
 output = gen_test_case_v2(base_content)
-open('test_case3v2_128k_sample3.txt', 'w', encoding='utf8').write(output)
+open('test_case4v2_32k_sample3.txt', 'w', encoding='utf8').write(output)

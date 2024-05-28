@@ -11,3 +11,4 @@ sensenova
 reka-api
 tencentcloud-sdk-python
 mistralai
+together

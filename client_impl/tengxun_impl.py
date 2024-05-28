@@ -64,19 +64,22 @@ class Tengxun_Client(llm_client_base.LlmClientBase):
             }
 
             choice0 = chunk['Choices'][0]
-            role = choice0['Delta']['Role']
+
             if choice0['FinishReason']:
                 finish_reason = choice0['FinishReason']
-            result_buffer += choice0['Delta']['Content']
-            if choice0['Delta']['Content'] and first_token_time is None:
-                first_token_time = time.time()
 
-            yield {
-                'role': role,
-                'delta_content': choice0['Delta']['Content'],
-                'accumulated_content': result_buffer,
-                'usage': usage,
-            }
+            if 'Delta' in choice0:
+                role = choice0['Delta']['Role']
+                result_buffer += choice0['Delta']['Content']
+                if choice0['Delta']['Content'] and first_token_time is None:
+                    first_token_time = time.time()
+
+                yield {
+                    'role': role,
+                    'delta_content': choice0['Delta']['Content'],
+                    'accumulated_content': result_buffer,
+                    'usage': usage,
+                }
 
         completion_time = time.time()
 

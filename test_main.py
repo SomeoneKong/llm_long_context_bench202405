@@ -20,6 +20,7 @@ from client_impl.deepseek_impl import DeepSeek_Client
 from client_impl.tengxun_impl import Tengxun_Client
 
 from client_impl.together_impl import Together_Client
+from client_impl.siliconflow_impl import SiliconFlow_Client
 from client_impl.duckagi_impl import DuckAgi_Client
 
 
@@ -97,6 +98,8 @@ def test_128k():
     # client_factory, model_name, gap_time = Baidu_Client, "ERNIE-Speed-128K", max(60/60, 60 / (300 / 120) * 2)
 
     # client_factory, model_name, gap_time = Tengxun_Client, "hunyuan-lite", 0
+
+    client_factory, model_name, gap_time = SiliconFlow_Client, "deepseek-ai/deepseek-v2-chat", 10
 
     test_file_list = [
         'test_case3v2_128k_sample1.txt',
@@ -217,7 +220,9 @@ def test_32k():
     # client_factory, model_name, gap_time = Together_Client, "Qwen/Qwen1.5-72B-Chat", 60
     # client_factory, model_name, gap_time = Together_Client, "Qwen/Qwen1.5-110B-Chat", 60
     # client_factory, model_name, gap_time = Together_Client, "Qwen/Qwen1.5-32B-Chat", 60
-    client_factory, model_name, gap_time = Together_Client, "Qwen/Qwen1.5-14B-Chat", 60
+    # client_factory, model_name, gap_time = Together_Client, "Qwen/Qwen1.5-14B-Chat", 60
+
+    client_factory, model_name, gap_time = SiliconFlow_Client, "deepseek-ai/deepseek-v2-chat", 10
 
     test_file_list = [
         'test_case3v2_32k_sample1.txt',

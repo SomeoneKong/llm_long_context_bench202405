@@ -18,6 +18,7 @@ from client_impl.alibaba_impl import Alibaba_Client
 from client_impl.minimax_impl import Minimax_Client
 from client_impl.deepseek_impl import DeepSeek_Client
 from client_impl.tengxun_impl import Tengxun_Client
+from client_impl.bytedance_impl import ByteDance_Client
 
 from client_impl.together_impl import Together_Client
 from client_impl.siliconflow_impl import SiliconFlow_Client
@@ -99,7 +100,11 @@ def test_128k():
 
     # client_factory, model_name, gap_time = Tengxun_Client, "hunyuan-lite", 0
 
-    client_factory, model_name, gap_time = SiliconFlow_Client, "deepseek-ai/deepseek-v2-chat", 10
+    # client_factory, model_name, gap_time = SiliconFlow_Client, "deepseek-ai/deepseek-v2-chat", 10
+
+    # client_factory, model_name, gap_time = ByteDance_Client, "ep-xxxxx", max(60/1000, 60 / (400 / 120)), # doubao-lite-128k
+
+    # client_factory, model_name, gap_time = ByteDance_Client, "ep-xxxxx", max(60/1000, 60 / (400 / 120)), # doubao-pro-128k
 
     test_file_list = [
         'test_case3v2_128k_sample1.txt',
@@ -222,7 +227,10 @@ def test_32k():
     # client_factory, model_name, gap_time = Together_Client, "Qwen/Qwen1.5-32B-Chat", 60
     # client_factory, model_name, gap_time = Together_Client, "Qwen/Qwen1.5-14B-Chat", 60
 
-    client_factory, model_name, gap_time = SiliconFlow_Client, "deepseek-ai/deepseek-v2-chat", 10
+    # client_factory, model_name, gap_time = SiliconFlow_Client, "deepseek-ai/deepseek-v2-chat", 10
+
+    # client_factory, model_name, gap_time = ByteDance_Client, "ep-xxxxx", max(60/1000, 60 / (800 / 120)), # doubao-pro-32k
+    # client_factory, model_name, gap_time = ByteDance_Client, "ep-xxxxx", max(60/1000, 60 / (800 / 120)), # doubao-lite-32k
 
     test_file_list = [
         'test_case3v2_32k_sample1.txt',

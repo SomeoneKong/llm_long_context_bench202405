@@ -5,6 +5,7 @@ from client_impl.openai_impl import OpenAI_Client
 from client_impl.google_impl import Gemini_Client
 from client_impl.anthropic_impl import Anthropic_Client
 from client_impl.reka_impl import Reka_Client
+from client_impl.mistral_impl import Mistral_Client
 
 from client_impl.zhipu_impl import Zhipu_Client
 from client_impl.yi_impl import Yi_Client
@@ -16,7 +17,11 @@ from client_impl.baichuan_impl import Baichuan_Client
 from client_impl.alibaba_impl import Alibaba_Client
 from client_impl.minimax_impl import Minimax_Client
 from client_impl.deepseek_impl import DeepSeek_Client
+from client_impl.tengxun_impl import Tengxun_Client
+from client_impl.bytedance_impl import ByteDance_Client
 
+from client_impl.together_impl import Together_Client
+from client_impl.siliconflow_impl import SiliconFlow_Client
 from client_impl.duckagi_impl import DuckAgi_Client
 
 
@@ -66,7 +71,7 @@ def test_128k():
     # client_factory, model_name = DuckAgi_Client, "claude-3-haiku-20240307"
     # client_factory, model_name = DuckAgi_Client, "claude-3-sonnet-20240229"
 
-    client_factory, model_name, gap_time = Reka_Client, "reka-core", 60
+    # client_factory, model_name, gap_time = Reka_Client, "reka-core", 60
     # client_factory, model_name, gap_time = Reka_Client, "reka-flash", 60
 
     # cohere
@@ -92,6 +97,14 @@ def test_128k():
     # client_factory, model_name = SenseNova_Client, "SenseChat-128K"  # content blocked
 
     # client_factory, model_name, gap_time = Baidu_Client, "ERNIE-Speed-128K", max(60/60, 60 / (300 / 120) * 2)
+
+    # client_factory, model_name, gap_time = Tengxun_Client, "hunyuan-lite", 0
+
+    # client_factory, model_name, gap_time = SiliconFlow_Client, "deepseek-ai/deepseek-v2-chat", 10
+
+    # client_factory, model_name, gap_time = ByteDance_Client, "ep-xxxxx", max(60/1000, 60 / (400 / 120)), # doubao-lite-128k
+
+    # client_factory, model_name, gap_time = ByteDance_Client, "ep-xxxxx", max(60/1000, 60 / (400 / 120)), # doubao-pro-128k
 
     test_file_list = [
         'test_case3v2_128k_sample1.txt',

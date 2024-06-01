@@ -18,6 +18,8 @@ import os
 
 
 class Anthropic_Client(llm_client_base.LlmClientBase):
+    support_system_message: bool = True
+
     def __init__(self):
         super().__init__()
 
@@ -29,12 +31,18 @@ class Anthropic_Client(llm_client_base.LlmClientBase):
         )
 
     async def chat_stream_async(self, model_name, history, temperature, force_calc_token_num):
+        system_message_list = [m for m in history if m['role'] == 'system']
+        system_prompt = system_message_list[-1]['content'] if system_message_list else None
+
+        message_list = [m for m in history if m['role'] != 'system']
+
         current_message = None
         start_time = time.time()
         first_token_time = None
         async with self.client.messages.stream(
                 model=model_name,
-                messages=history,
+                messages=message_list,
+                system=system_prompt,
                 temperature=temperature,
                 max_tokens=1024 * 3,  # 必选项
         ) as stream:

@@ -19,6 +19,8 @@ import google.generativeai as genai
 
 
 class Gemini_Client(llm_client_base.LlmClientBase):
+    support_system_message: bool = False
+
     def __init__(self):
         super().__init__()
 
@@ -44,6 +46,9 @@ class Gemini_Client(llm_client_base.LlmClientBase):
             return 'unknown'
 
     async def chat_stream_async(self, model_name, history, temperature, force_calc_token_num):
+        system_message_list = [m for m in history if m['role'] == 'system']
+        assert len(system_message_list) == 0, "Google Gemini does not support system messages"
+
         model = genai.GenerativeModel(model_name)
         generation_config = genai.types.GenerationConfig(
             temperature=temperature)

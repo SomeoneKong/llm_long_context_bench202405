@@ -15,6 +15,8 @@ from sparkai.core.messages import ChatMessage
 
 
 class Xunfei_Client(llm_client_base.LlmClientBase):
+    support_system_message: bool = True
+
     def __init__(self):
         super().__init__()
 

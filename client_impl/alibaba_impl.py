@@ -12,6 +12,8 @@ import dashscope
 
 
 class Alibaba_Client(llm_client_base.LlmClientBase):
+    support_system_message: bool = True
+
     def __init__(self):
         super().__init__()
 

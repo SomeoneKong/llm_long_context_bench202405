@@ -14,13 +14,24 @@ import qianfan
 
 
 class Baidu_Client(llm_client_base.LlmClientBase):
+    support_system_message: bool = True
+
     def __init__(self):
         super().__init__()
 
     async def chat_stream_async(self, model_name, history, temperature, force_calc_token_num):
+        system_message_list = [m for m in history if m['role'] == 'system']
+        system_prompt = system_message_list[-1]['content'] if system_message_list else None
+
+        message_list = [m for m in history if m['role'] != 'system']
+
         start_time = time.time()
         chat_comp = qianfan.ChatCompletion(model=model_name)
-        resp = await chat_comp.ado(messages=history, temperature=temperature, stream=True)
+        resp = await chat_comp.ado(messages=message_list,
+                                   system=system_prompt,
+                                   temperature=temperature,
+                                   stream=True
+                                   )
 
         result_buffer = ''
         usage = None

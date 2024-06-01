@@ -14,6 +14,8 @@ from volcenginesdkarkruntime import AsyncArk
 
 
 class ByteDance_Client(llm_client_base.LlmClientBase):
+    support_system_message: bool = True
+
     def __init__(self):
         super().__init__()
         ak = os.getenv('VOLC_ACCESSKEY')

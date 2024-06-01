@@ -17,6 +17,8 @@ from openai import AsyncOpenAI
 
 
 class OpenAI_Client(llm_client_base.LlmClientBase):
+    support_system_message: bool = True
+
     def __init__(self,
                  api_base_url=None,
                  api_key=None,

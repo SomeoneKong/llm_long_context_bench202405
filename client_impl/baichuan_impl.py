@@ -11,6 +11,8 @@ from .openai_impl import OpenAI_Client
 
 
 class Baichuan_Client(OpenAI_Client):
+    support_system_message: bool = True
+
     def __init__(self):
         api_key = os.getenv('BAICHUAN_API_KEY')
 

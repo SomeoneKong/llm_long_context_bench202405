@@ -11,16 +11,16 @@ from tencentcloud.hunyuan.v20230901 import hunyuan_client, models
 from tencentcloud.common.profile.http_profile import HttpProfile
 
 # config from .env
-# TENGXUN_SECRET_ID
-# TENGXUN_SECRET_KEY
+# TENCENT_SECRET_ID
+# TENCENT_SECRET_KEY
 
 
-class Tengxun_Client(llm_client_base.LlmClientBase):
+class Tencent_Client(llm_client_base.LlmClientBase):
     def __init__(self):
         super().__init__()
 
-        secret_id = os.getenv('TENGXUN_SECRET_ID')
-        secret_key = os.getenv('TENGXUN_SECRET_KEY')
+        secret_id = os.getenv('TENCENT_SECRET_ID')
+        secret_key = os.getenv('TENCENT_SECRET_KEY')
         assert secret_id is not None
 
         self.cred = credential.Credential(secret_id, secret_key)
@@ -97,7 +97,7 @@ if __name__ == '__main__':
     import asyncio
     import os
 
-    client = Tengxun_Client()
+    client = Tencent_Client()
     model_name = "hunyuan-lite"
     history = [{"role": "user", "content": "Hello, how are you?"}]
     temperature = 0.01

@@ -17,7 +17,7 @@ from client_impl.baichuan_impl import Baichuan_Client
 from client_impl.alibaba_impl import Alibaba_Client
 from client_impl.minimax_impl import Minimax_Client
 from client_impl.deepseek_impl import DeepSeek_Client
-from client_impl.tengxun_impl import Tengxun_Client
+from client_impl.tencent_impl import Tencent_Client
 from client_impl.bytedance_impl import ByteDance_Client
 
 from client_impl.together_impl import Together_Client
@@ -98,7 +98,7 @@ def test_128k():
 
     # client_factory, model_name, gap_time = Baidu_Client, "ERNIE-Speed-128K", max(60/60, 60 / (300 / 120) * 2)
 
-    # client_factory, model_name, gap_time = Tengxun_Client, "hunyuan-lite", 0
+    # client_factory, model_name, gap_time = Tencent_Client, "hunyuan-lite", 0
 
     # client_factory, model_name, gap_time = SiliconFlow_Client, "deepseek-ai/deepseek-v2-chat", 10
 

@@ -12,3 +12,4 @@ reka-api
 tencentcloud-sdk-python
 mistralai
 together
+volcengine-python-sdk[ark]

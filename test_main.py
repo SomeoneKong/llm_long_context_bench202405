@@ -218,9 +218,9 @@ def test_32k():
     # client_factory, model_name = Alibaba_Client, "qwen-plus"
     # client_factory, model_name = Alibaba_Client, "qwen-max-longcontext"
 
-    # client_factory, model_name, gap_time = Tengxun_Client, "hunyuan-lite", 0
-    # client_factory, model_name, gap_time = Tengxun_Client, "hunyuan-standard", 0
-    # client_factory, model_name, gap_time = Tengxun_Client, "hunyuan-pro", 0
+    # client_factory, model_name, gap_time = Tencent_Client, "hunyuan-lite", 0
+    # client_factory, model_name, gap_time = Tencent_Client, "hunyuan-standard", 0
+    # client_factory, model_name, gap_time = Tencent_Client, "hunyuan-pro", 0
 
     # client_factory, model_name, gap_time = Together_Client, "Qwen/Qwen1.5-72B-Chat", 60
     # client_factory, model_name, gap_time = Together_Client, "Qwen/Qwen1.5-110B-Chat", 60

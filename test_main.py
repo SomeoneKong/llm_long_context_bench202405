@@ -43,11 +43,15 @@ async def run_test(client_factory, model_name, prompt):
         else:
             print()
 
+    if result == '':
+        print(f'finish_reason: {chunk["finish_reason"]}')
+
     await client.close()
 
     ret = {
         'result': result,
         'usage': usage,
+        'finish_reason': chunk['finish_reason'],
         'first_token_time': chunk['first_token_time'],
         'total_time': chunk['completion_time'],
     }
@@ -81,6 +85,7 @@ def test_128k():
 
     # client_factory, model_name, gap_time = Zhipu_Client, "glm-3-turbo", 0
     # client_factory, model_name, gap_time = Zhipu_Client, "glm-4", 0
+    client_factory, model_name, gap_time = Zhipu_Client, "glm-4-air", 0
 
     # client_factory, model_name, gap_time = Yi_Client, "yi-medium-200k", max(60/10, 60 / (300 / 120))  # tier1
 
@@ -98,7 +103,8 @@ def test_128k():
 
     # client_factory, model_name, gap_time = Baidu_Client, "ERNIE-Speed-128K", max(60/60, 60 / (300 / 120) * 2)
 
-    # client_factory, model_name, gap_time = Tencent_Client, "hunyuan-lite", 0
+    client_factory, model_name, gap_time = Tencent_Client, "hunyuan-lite", 0
+    # client_factory, model_name, gap_time = Tencent_Client, "hunyuan-standard-256K", 0
 
     # client_factory, model_name, gap_time = SiliconFlow_Client, "deepseek-ai/deepseek-v2-chat", 10
 
@@ -194,6 +200,9 @@ def test_32k():
 
     # client_factory, model_name, gap_time = Zhipu_Client, "glm-3-turbo", 0
     # client_factory, model_name, gap_time = Zhipu_Client, "glm-4", 0
+    # client_factory, model_name, gap_time = Zhipu_Client, "glm-4-air", 0
+    # client_factory, model_name, gap_time = Zhipu_Client, "glm-4-flash", 0
+    client_factory, model_name, gap_time = Zhipu_Client, "glm-4-0520", 0
 
     # client_factory, model_name, gap_time = Yi_Client, "yi-medium-200k", max(60/10, 60 / (300 / 30))  # tier1
 
@@ -231,6 +240,8 @@ def test_32k():
 
     # client_factory, model_name, gap_time = ByteDance_Client, "ep-xxxxx", max(60/1000, 60 / (800 / 120)), # doubao-pro-32k
     # client_factory, model_name, gap_time = ByteDance_Client, "ep-xxxxx", max(60/1000, 60 / (800 / 120)), # doubao-lite-32k
+
+    # client_factory, model_name, gap_time = SiliconFlow_Client, "zhipuai/chatglm3-6B", 10
 
     test_file_list = [
         'test_case3v2_32k_sample1.txt',

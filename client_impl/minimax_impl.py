@@ -127,7 +127,7 @@ class Minimax_Client(llm_client_base.LlmClientBase):
             'accumulated_content': result_buffer,
             'finish_reason': finish_reason,
             'usage': usage,
-            'first_token_time': first_token_time - start_time,
+            'first_token_time': first_token_time - start_time if first_token_time else None,
             'completion_time': completion_time - start_time,
         }
 

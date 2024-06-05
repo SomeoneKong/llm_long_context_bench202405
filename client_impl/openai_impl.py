@@ -77,7 +77,7 @@ class OpenAI_Client(llm_client_base.LlmClientBase):
             'finish_reason': finish_reason,
             'system_fingerprint': system_fingerprint,
             'usage': usage or {},
-            'first_token_time': first_token_time - start_time,
+            'first_token_time': first_token_time - start_time if first_token_time else None,
             'completion_time': completion_time - start_time,
         }
 

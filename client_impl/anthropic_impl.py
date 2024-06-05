@@ -67,7 +67,7 @@ class Anthropic_Client(llm_client_base.LlmClientBase):
             'accumulated_content': current_message.content[0].text,
             'finish_reason': current_message.stop_reason,
             'usage': usage,
-            'first_token_time': first_token_time - start_time,
+            'first_token_time': first_token_time - start_time if first_token_time else None,
             'completion_time': completion_time - start_time,
         }
 

@@ -1,7 +1,6 @@
 socksio
 tiktoken
 openai
-zhipuai
 google-generativeai
 anthropic
 qianfan

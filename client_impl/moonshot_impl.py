@@ -41,8 +41,10 @@ class Moonshot_Client(OpenAI_Client):
                 resp_json = await response.json()
                 return resp_json['data']['total_tokens']
 
-    async def chat_stream_async(self, model_name, history, temperature, force_calc_token_num):
-        async for chunk in super().chat_stream_async(model_name, history, temperature, force_calc_token_num):
+    async def chat_stream_async(self, model_name, history, model_param, client_param):
+        force_calc_token_num = client_param.get('force_calc_token_num', False)
+
+        async for chunk in super().chat_stream_async(model_name, history, model_param, client_param):
             if force_calc_token_num and 'finish_reason' in chunk:
                 prompt_token_num = await self.count_token(model_name, history)
                 completion_message = {"role": chunk['role'], "content": chunk['accumulated_content']}
@@ -55,8 +57,6 @@ class Moonshot_Client(OpenAI_Client):
             yield chunk
 
 
-
-
 if __name__ == '__main__':
     import asyncio
     import os
@@ -64,10 +64,13 @@ if __name__ == '__main__':
     client = Moonshot_Client()
     model_name = "moonshot-v1-8k"
     history = [{"role": "user", "content": "Hello, how are you?"}]
-    temperature = 0.01
+
+    model_param = {
+        'temperature': 0.01,
+    }
 
     async def main():
-        async for chunk in client.chat_stream_async(model_name, history, temperature, force_calc_token_num=True):
+        async for chunk in client.chat_stream_async(model_name, history, model_param, client_param={}):
             print(chunk)
 
     asyncio.run(main())

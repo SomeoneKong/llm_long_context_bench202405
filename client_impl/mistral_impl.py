@@ -23,7 +23,8 @@ class Mistral_Client(llm_client_base.LlmClientBase):
 
         self.client = MistralAsyncClient(api_key=api_key)
 
-    async def chat_stream_async(self, model_name, history, temperature, force_calc_token_num):
+    async def chat_stream_async(self, model_name, history, model_param, client_param):
+        temperature = model_param['temperature']
 
         message_list = [
             ChatMessage(role=message['role'], content=message['content'])
@@ -32,7 +33,11 @@ class Mistral_Client(llm_client_base.LlmClientBase):
 
         start_time = time.time()
 
-        async_response = self.client.chat_stream(model=model_name, messages=message_list)
+        async_response = self.client.chat_stream(
+            model=model_name,
+            messages=message_list,
+            temperature=temperature
+        )
 
         role = None
         result_buffer = ''
@@ -78,10 +83,13 @@ if __name__ == '__main__':
     client = Mistral_Client()
     model_name = "mistral-small-latest"
     history = [{"role": "user", "content": "Hello, how are you?"}]
-    temperature = 0.01
+
+    model_param = {
+        'temperature': 0.01,
+    }
 
     async def main():
-        async for chunk in client.chat_stream_async(model_name, history, temperature, force_calc_token_num=True):
+        async for chunk in client.chat_stream_async(model_name, history, model_param, client_param={}):
             print(chunk)
 
     asyncio.run(main())

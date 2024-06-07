@@ -30,10 +30,16 @@ async def run_test(client_factory, model_name, prompt):
     history = [{"role": "user", "content": prompt}]
     temperature = 0.8
 
+    model_param = {
+        'temperature': temperature,
+    }
+    client_param = {
+        'force_calc_token_num': True,
+    }
+
     result = ''
     usage = None
-
-    async for chunk in client.chat_stream_async(model_name, history, temperature, force_calc_token_num=True):
+    async for chunk in client.chat_stream_async(model_name, history, model_param, client_param):
         result = chunk['accumulated_content']
         if 'usage' in chunk:
             usage = chunk['usage']
@@ -186,7 +192,7 @@ def test_32k():
     # client_factory, model_name, gap_time = Reka_Client, "reka-core", 0
     # client_factory, model_name, gap_time = Reka_Client, "reka-flash", 0
 
-    # client_factory, model_name, gap_time = Mistral_Client, "mistral-small-latest", 0
+    client_factory, model_name, gap_time = Mistral_Client, "mistral-small-latest", 0
     # client_factory, model_name, gap_time = Mistral_Client, "mistral-medium-latest", 0
     # client_factory, model_name, gap_time = Mistral_Client, "mistral-large-latest", 0
     # client_factory, model_name, gap_time = Mistral_Client, "open-mixtral-8x22b", 0
@@ -202,7 +208,7 @@ def test_32k():
     # client_factory, model_name, gap_time = Zhipu_Client, "glm-4", 0
     # client_factory, model_name, gap_time = Zhipu_Client, "glm-4-air", 0
     # client_factory, model_name, gap_time = Zhipu_Client, "glm-4-flash", 0
-    client_factory, model_name, gap_time = Zhipu_Client, "glm-4-0520", 0
+    # client_factory, model_name, gap_time = Zhipu_Client, "glm-4-0520", 0
 
     # client_factory, model_name, gap_time = Yi_Client, "yi-medium-200k", max(60/10, 60 / (300 / 30))  # tier1
 

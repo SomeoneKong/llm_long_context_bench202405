@@ -25,7 +25,9 @@ class Xunfei_Client(llm_client_base.LlmClientBase):
         self.api_secret = os.getenv('SPARKAI_API_SECRET')
         assert self.api_key is not None
 
-    async def chat_stream_async(self, model_name, history, temperature, force_calc_token_num):
+    async def chat_stream_async(self, model_name, history, model_param, client_param):
+        temperature = model_param['temperature']
+
         messages = []
         for message in history:
             messages.append(ChatMessage(
@@ -94,10 +96,13 @@ if __name__ == '__main__':
     client = Xunfei_Client()
     model_name = "spark-1.5"
     history = [{"role": "user", "content": "Hello, how are you?"}]
-    temperature = 0.01
+
+    model_param = {
+        'temperature': 0.01,
+    }
 
     async def main():
-        async for chunk in client.chat_stream_async(model_name, history, temperature, force_calc_token_num=True):
+        async for chunk in client.chat_stream_async(model_name, history, model_param, client_param={}):
             print(chunk)
 
     asyncio.run(main())

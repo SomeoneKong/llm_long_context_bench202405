@@ -27,8 +27,9 @@ class Tencent_Client(llm_client_base.LlmClientBase):
 
         self.cred = credential.Credential(secret_id, secret_key)
 
+    async def chat_stream_async(self, model_name, history, model_param, client_param):
+        temperature = model_param['temperature']
 
-    async def chat_stream_async(self, model_name, history, temperature, force_calc_token_num):
         start_time = time.time()
 
         cpf = ClientProfile(httpProfile=HttpProfile(reqTimeout=600))
@@ -102,10 +103,13 @@ if __name__ == '__main__':
     client = Tencent_Client()
     model_name = "hunyuan-lite"
     history = [{"role": "user", "content": "Hello, how are you?"}]
-    temperature = 0.01
+
+    model_param = {
+        'temperature': 0.01,
+    }
 
     async def main():
-        async for chunk in client.chat_stream_async(model_name, history, temperature, force_calc_token_num=True):
+        async for chunk in client.chat_stream_async(model_name, history, model_param, client_param={}):
             print(chunk)
 
     asyncio.run(main())

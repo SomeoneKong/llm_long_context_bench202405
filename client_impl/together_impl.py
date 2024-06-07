@@ -22,7 +22,9 @@ class Together_Client(llm_client_base.LlmClientBase):
 
         self.client = AsyncTogether(api_key=api_key)
 
-    async def chat_stream_async(self, model_name, history, temperature, force_calc_token_num):
+    async def chat_stream_async(self, model_name, history, model_param, client_param):
+        temperature = model_param['temperature']
+
         start_time = time.time()
 
         response = await self.client.chat.completions.create(
@@ -77,10 +79,13 @@ if __name__ == '__main__':
     client = Together_Client()
     model_name = "Qwen/Qwen1.5-72B-Chat"
     history = [{"role": "user", "content": "Hello, how are you?"}]
-    temperature = 0.01
+
+    model_param = {
+        'temperature': 0.01,
+    }
 
     async def main():
-        async for chunk in client.chat_stream_async(model_name, history, temperature, force_calc_token_num=True):
+        async for chunk in client.chat_stream_async(model_name, history, model_param, client_param={}):
             print(chunk)
 
     asyncio.run(main())

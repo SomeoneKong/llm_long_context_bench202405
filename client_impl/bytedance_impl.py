@@ -26,7 +26,9 @@ class ByteDance_Client(llm_client_base.LlmClientBase):
     async def close(self):
         await self.client._client.aclose()
 
-    async def chat_stream_async(self, model_name, history, temperature, force_calc_token_num):
+    async def chat_stream_async(self, model_name, history, model_param, client_param):
+        temperature = model_param['temperature']
+
         start_time = time.time()
 
         resp = await self.client.chat.completions.create(
@@ -91,10 +93,13 @@ if __name__ == '__main__':
     client = ByteDance_Client()
     model_name = "ep-xxxxxxxxx"  # "Doubao-lite-128k"
     history = [{"role": "user", "content": "Hello, how are you?"}]
-    temperature = 0.01
+
+    model_param = {
+        'temperature': 0.01,
+    }
 
     async def main():
-        async for chunk in client.chat_stream_async(model_name, history, temperature, force_calc_token_num=True):
+        async for chunk in client.chat_stream_async(model_name, history, model_param, client_param={}):
             print(chunk)
 
     asyncio.run(main())

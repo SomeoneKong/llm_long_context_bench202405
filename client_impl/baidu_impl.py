@@ -19,7 +19,9 @@ class Baidu_Client(llm_client_base.LlmClientBase):
     def __init__(self):
         super().__init__()
 
-    async def chat_stream_async(self, model_name, history, temperature, force_calc_token_num):
+    async def chat_stream_async(self, model_name, history, model_param, client_param):
+        temperature = model_param['temperature']
+
         system_message_list = [m for m in history if m['role'] == 'system']
         system_prompt = system_message_list[-1]['content'] if system_message_list else None
 
@@ -75,10 +77,13 @@ if __name__ == '__main__':
     client = Baidu_Client()
     model_name = "ERNIE-Speed-8K"
     history = [{"role": "user", "content": "Hello, how are you?"}]
-    temperature = 0.01
+
+    model_param = {
+        'temperature': 0.01,
+    }
 
     async def main():
-        async for chunk in client.chat_stream_async(model_name, history, temperature, force_calc_token_num=True):
+        async for chunk in client.chat_stream_async(model_name, history, model_param, client_param={}):
             print(chunk)
 
     asyncio.run(main())

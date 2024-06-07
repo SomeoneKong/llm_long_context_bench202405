@@ -11,6 +11,8 @@ from .openai_impl import OpenAI_Client
 
 
 class Yi_Client(OpenAI_Client):
+    support_system_message: bool = True
+
     def __init__(self):
         api_key = os.getenv('YI_API_KEY')
 
@@ -27,10 +29,13 @@ if __name__ == '__main__':
     client = Yi_Client()
     model_name = "yi-spark"
     history = [{"role": "user", "content": "Hello, how are you?"}]
-    temperature = 0.01
+
+    model_param = {
+        'temperature': 0.01,
+    }
 
     async def main():
-        async for chunk in client.chat_stream_async(model_name, history, temperature, force_calc_token_num=True):
+        async for chunk in client.chat_stream_async(model_name, history, model_param, client_param={}):
             print(chunk)
 
     asyncio.run(main())

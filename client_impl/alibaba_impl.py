@@ -12,13 +12,17 @@ import dashscope
 
 
 class Alibaba_Client(llm_client_base.LlmClientBase):
+    support_system_message: bool = True
+
     def __init__(self):
         super().__init__()
 
         api_key = os.getenv('DASHSCOPE_API_KEY')
         assert api_key is not None
 
-    async def chat_stream_async(self, model_name, history, temperature, force_calc_token_num):
+    async def chat_stream_async(self, model_name, history, model_param, client_param):
+        temperature = model_param['temperature']
+
         start_time = time.time()
         stream_response = await dashscope.AioGeneration.call(
             model=model_name,
@@ -67,7 +71,7 @@ class Alibaba_Client(llm_client_base.LlmClientBase):
             'accumulated_content': result_buffer,
             'finish_reason': finish_reason,
             'usage': usage,
-            'first_token_time': first_token_time - start_time,
+            'first_token_time': first_token_time - start_time if first_token_time else None,
             'completion_time': completion_time - start_time,
         }
 
@@ -79,10 +83,13 @@ if __name__ == '__main__':
     client = Alibaba_Client()
     model_name = "qwen-plus"
     history = [{"role": "user", "content": "Hello, how are you?"}]
-    temperature = 0.01
+
+    model_param = {
+        'temperature': 0.01,
+    }
 
     async def main():
-        async for chunk in client.chat_stream_async(model_name, history, temperature, force_calc_token_num=True):
+        async for chunk in client.chat_stream_async(model_name, history, model_param, client_param={}):
             print(chunk)
 
     asyncio.run(main())

@@ -14,13 +14,26 @@ import qianfan
 
 
 class Baidu_Client(llm_client_base.LlmClientBase):
+    support_system_message: bool = True
+
     def __init__(self):
         super().__init__()
 
-    async def chat_stream_async(self, model_name, history, temperature, force_calc_token_num):
+    async def chat_stream_async(self, model_name, history, model_param, client_param):
+        temperature = model_param['temperature']
+
+        system_message_list = [m for m in history if m['role'] == 'system']
+        system_prompt = system_message_list[-1]['content'] if system_message_list else None
+
+        message_list = [m for m in history if m['role'] != 'system']
+
         start_time = time.time()
         chat_comp = qianfan.ChatCompletion(model=model_name)
-        resp = await chat_comp.ado(messages=history, temperature=temperature, stream=True)
+        resp = await chat_comp.ado(messages=message_list,
+                                   system=system_prompt,
+                                   temperature=temperature,
+                                   stream=True
+                                   )
 
         result_buffer = ''
         usage = None
@@ -52,7 +65,7 @@ class Baidu_Client(llm_client_base.LlmClientBase):
             'finish_reason': 0,
             'usage': usage,
             'rate_limit_info': rate_limit_info,
-            'first_token_time': first_token_time - start_time,
+            'first_token_time': first_token_time - start_time if first_token_time else None,
             'completion_time': completion_time - start_time,
         }
 
@@ -64,10 +77,13 @@ if __name__ == '__main__':
     client = Baidu_Client()
     model_name = "ERNIE-Speed-8K"
     history = [{"role": "user", "content": "Hello, how are you?"}]
-    temperature = 0.01
+
+    model_param = {
+        'temperature': 0.01,
+    }
 
     async def main():
-        async for chunk in client.chat_stream_async(model_name, history, temperature, force_calc_token_num=True):
+        async for chunk in client.chat_stream_async(model_name, history, model_param, client_param={}):
             print(chunk)
 
     asyncio.run(main())

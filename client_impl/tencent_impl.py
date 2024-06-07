@@ -11,22 +11,25 @@ from tencentcloud.hunyuan.v20230901 import hunyuan_client, models
 from tencentcloud.common.profile.http_profile import HttpProfile
 
 # config from .env
-# TENGXUN_SECRET_ID
-# TENGXUN_SECRET_KEY
+# TENCENT_SECRET_ID
+# TENCENT_SECRET_KEY
 
 
-class Tengxun_Client(llm_client_base.LlmClientBase):
+class Tencent_Client(llm_client_base.LlmClientBase):
+    support_system_message: bool = True
+
     def __init__(self):
         super().__init__()
 
-        secret_id = os.getenv('TENGXUN_SECRET_ID')
-        secret_key = os.getenv('TENGXUN_SECRET_KEY')
+        secret_id = os.getenv('TENCENT_SECRET_ID')
+        secret_key = os.getenv('TENCENT_SECRET_KEY')
         assert secret_id is not None
 
         self.cred = credential.Credential(secret_id, secret_key)
 
+    async def chat_stream_async(self, model_name, history, model_param, client_param):
+        temperature = model_param['temperature']
 
-    async def chat_stream_async(self, model_name, history, temperature, force_calc_token_num):
         start_time = time.time()
 
         cpf = ClientProfile(httpProfile=HttpProfile(reqTimeout=600))
@@ -88,7 +91,7 @@ class Tengxun_Client(llm_client_base.LlmClientBase):
             'accumulated_content': result_buffer,
             'finish_reason': finish_reason,
             'usage': usage,
-            'first_token_time': first_token_time - start_time,
+            'first_token_time': first_token_time - start_time if first_token_time else None,
             'completion_time': completion_time - start_time,
         }
 
@@ -97,13 +100,16 @@ if __name__ == '__main__':
     import asyncio
     import os
 
-    client = Tengxun_Client()
+    client = Tencent_Client()
     model_name = "hunyuan-lite"
     history = [{"role": "user", "content": "Hello, how are you?"}]
-    temperature = 0.01
+
+    model_param = {
+        'temperature': 0.01,
+    }
 
     async def main():
-        async for chunk in client.chat_stream_async(model_name, history, temperature, force_calc_token_num=True):
+        async for chunk in client.chat_stream_async(model_name, history, model_param, client_param={}):
             print(chunk)
 
     asyncio.run(main())

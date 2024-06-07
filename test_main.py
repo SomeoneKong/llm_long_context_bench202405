@@ -17,7 +17,7 @@ from client_impl.baichuan_impl import Baichuan_Client
 from client_impl.alibaba_impl import Alibaba_Client
 from client_impl.minimax_impl import Minimax_Client
 from client_impl.deepseek_impl import DeepSeek_Client
-from client_impl.tengxun_impl import Tengxun_Client
+from client_impl.tencent_impl import Tencent_Client
 from client_impl.bytedance_impl import ByteDance_Client
 
 from client_impl.together_impl import Together_Client
@@ -30,10 +30,16 @@ async def run_test(client_factory, model_name, prompt):
     history = [{"role": "user", "content": prompt}]
     temperature = 0.8
 
+    model_param = {
+        'temperature': temperature,
+    }
+    client_param = {
+        'force_calc_token_num': True,
+    }
+
     result = ''
     usage = None
-
-    async for chunk in client.chat_stream_async(model_name, history, temperature, force_calc_token_num=True):
+    async for chunk in client.chat_stream_async(model_name, history, model_param, client_param):
         result = chunk['accumulated_content']
         if 'usage' in chunk:
             usage = chunk['usage']
@@ -43,11 +49,15 @@ async def run_test(client_factory, model_name, prompt):
         else:
             print()
 
+    if result == '':
+        print(f'finish_reason: {chunk["finish_reason"]}')
+
     await client.close()
 
     ret = {
         'result': result,
         'usage': usage,
+        'finish_reason': chunk['finish_reason'],
         'first_token_time': chunk['first_token_time'],
         'total_time': chunk['completion_time'],
     }
@@ -72,7 +82,7 @@ def test_128k():
     # client_factory, model_name = DuckAgi_Client, "claude-3-sonnet-20240229"
 
     # client_factory, model_name, gap_time = Reka_Client, "reka-core", 60
-    # client_factory, model_name, gap_time = Reka_Client, "reka-flash", 60
+    # client_factory, model_name, gap_time = Reka_Client, "reka-flash", 0
 
     # cohere
     # client_factory, model_name = DuckAgi_Client, "command-r"
@@ -81,6 +91,10 @@ def test_128k():
 
     # client_factory, model_name, gap_time = Zhipu_Client, "glm-3-turbo", 0
     # client_factory, model_name, gap_time = Zhipu_Client, "glm-4", 0
+    # client_factory, model_name, gap_time = Zhipu_Client, "glm-4-air", 0
+    # client_factory, model_name, gap_time = Zhipu_Client, "glm-4-airx", 0
+    # client_factory, model_name, gap_time = Zhipu_Client, "glm-4-flash", 0
+    # client_factory, model_name, gap_time = Zhipu_Client, "glm-4-0520", 0
 
     # client_factory, model_name, gap_time = Yi_Client, "yi-medium-200k", max(60/10, 60 / (300 / 120))  # tier1
 
@@ -98,7 +112,8 @@ def test_128k():
 
     # client_factory, model_name, gap_time = Baidu_Client, "ERNIE-Speed-128K", max(60/60, 60 / (300 / 120) * 2)
 
-    # client_factory, model_name, gap_time = Tengxun_Client, "hunyuan-lite", 0
+    # client_factory, model_name, gap_time = Tencent_Client, "hunyuan-lite", 0
+    # client_factory, model_name, gap_time = Tencent_Client, "hunyuan-standard-256K", 0
 
     # client_factory, model_name, gap_time = SiliconFlow_Client, "deepseek-ai/deepseek-v2-chat", 10
 

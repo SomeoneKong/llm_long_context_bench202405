@@ -27,7 +27,7 @@ class StepFun_Client(OpenAI_Client):
                 yield chunk
         except openai.APIStatusError as e:
             if 'censorship_blocked' in e.message:
-                raise llm_client_base.SensitiveBlockError()
+                raise llm_client_base.SensitiveBlockError() from e
 
             raise
 

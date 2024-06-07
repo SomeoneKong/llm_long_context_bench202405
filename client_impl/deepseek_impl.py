@@ -27,7 +27,7 @@ class DeepSeek_Client(OpenAI_Client):
                 yield chunk
         except openai.BadRequestError as e:
             if 'Content Exists Risk' in e.message:
-                raise llm_client_base.SensitiveBlockError()
+                raise llm_client_base.SensitiveBlockError() from e
 
             raise
 

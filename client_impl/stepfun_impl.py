@@ -1,7 +1,7 @@
 
 
 import os
-
+import openai
 import llm_client_base
 
 from .openai_impl import OpenAI_Client
@@ -20,6 +20,16 @@ class StepFun_Client(OpenAI_Client):
             api_base_url="https://api.stepfun.com/v1",
             api_key=api_key,
         )
+
+    async def chat_stream_async(self, model_name, history, model_param, client_param):
+        try:
+            async for chunk in super().chat_stream_async(model_name, history, model_param, client_param):
+                yield chunk
+        except openai.APIStatusError as e:
+            if 'censorship_blocked' in e.message:
+                raise llm_client_base.SensitiveBlockError()
+
+            raise
 
 
 if __name__ == '__main__':

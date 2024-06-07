@@ -82,7 +82,7 @@ def test_128k():
     # client_factory, model_name = DuckAgi_Client, "claude-3-sonnet-20240229"
 
     # client_factory, model_name, gap_time = Reka_Client, "reka-core", 60
-    # client_factory, model_name, gap_time = Reka_Client, "reka-flash", 60
+    # client_factory, model_name, gap_time = Reka_Client, "reka-flash", 0
 
     # cohere
     # client_factory, model_name = DuckAgi_Client, "command-r"
@@ -91,7 +91,10 @@ def test_128k():
 
     # client_factory, model_name, gap_time = Zhipu_Client, "glm-3-turbo", 0
     # client_factory, model_name, gap_time = Zhipu_Client, "glm-4", 0
-    client_factory, model_name, gap_time = Zhipu_Client, "glm-4-air", 0
+    # client_factory, model_name, gap_time = Zhipu_Client, "glm-4-air", 0
+    # client_factory, model_name, gap_time = Zhipu_Client, "glm-4-airx", 0
+    # client_factory, model_name, gap_time = Zhipu_Client, "glm-4-flash", 0
+    # client_factory, model_name, gap_time = Zhipu_Client, "glm-4-0520", 0
 
     # client_factory, model_name, gap_time = Yi_Client, "yi-medium-200k", max(60/10, 60 / (300 / 120))  # tier1
 
@@ -109,7 +112,7 @@ def test_128k():
 
     # client_factory, model_name, gap_time = Baidu_Client, "ERNIE-Speed-128K", max(60/60, 60 / (300 / 120) * 2)
 
-    client_factory, model_name, gap_time = Tencent_Client, "hunyuan-lite", 0
+    # client_factory, model_name, gap_time = Tencent_Client, "hunyuan-lite", 0
     # client_factory, model_name, gap_time = Tencent_Client, "hunyuan-standard-256K", 0
 
     # client_factory, model_name, gap_time = SiliconFlow_Client, "deepseek-ai/deepseek-v2-chat", 10
@@ -211,6 +214,7 @@ def test_32k():
     # client_factory, model_name, gap_time = Zhipu_Client, "glm-4-0520", 0
 
     # client_factory, model_name, gap_time = Yi_Client, "yi-medium-200k", max(60/10, 60 / (300 / 30))  # tier1
+    # client_factory, model_name, gap_time = Yi_Client, "yi-large", max(60/10, 60 / (80 / 30))  # tier1
 
     # client_factory, model_name, gap_time = Moonshot_Client, "moonshot-v1-32k", max(60/200, 60 / (128 / 30) * 2)
 
@@ -229,6 +233,7 @@ def test_32k():
     # client_factory, model_name = SenseNova_Client, "SenseChat-128K"  # content blocked
 
     # client_factory, model_name, gap_time = Baidu_Client, "ERNIE-Speed-128K", 60
+    # client_factory, model_name, gap_time = Baidu_Client, "ERNIE-3.5-128K", 60
 
     # client_factory, model_name = Alibaba_Client, "qwen-plus"
     # client_factory, model_name = Alibaba_Client, "qwen-max-longcontext"
@@ -247,7 +252,14 @@ def test_32k():
     # client_factory, model_name, gap_time = ByteDance_Client, "ep-xxxxx", max(60/1000, 60 / (800 / 120)), # doubao-pro-32k
     # client_factory, model_name, gap_time = ByteDance_Client, "ep-xxxxx", max(60/1000, 60 / (800 / 120)), # doubao-lite-32k
 
-    # client_factory, model_name, gap_time = SiliconFlow_Client, "zhipuai/chatglm3-6B", 10
+    # client_factory, model_name, gap_time = SiliconFlow_Client, "zhipuai/chatglm3-6B", 0
+    # client_factory, model_name, gap_time = SiliconFlow_Client, "zhipuai/glm4-9B-chat", 0
+
+    # client_factory, model_name, gap_time = SiliconFlow_Client, "alibaba/Qwen1.5-110B-Chat", 0
+
+    # client_factory, model_name, gap_time = SiliconFlow_Client, "alibaba/Qwen2-72B-Instruct", 0
+    # client_factory, model_name, gap_time = SiliconFlow_Client, "alibaba/Qwen2-57B-A14B-Instruct", 0
+    # client_factory, model_name, gap_time = SiliconFlow_Client, "alibaba/Qwen2-7B-Instruct", 0
 
     test_file_list = [
         'test_case3v2_32k_sample1.txt',

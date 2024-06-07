@@ -18,6 +18,8 @@ import os
 
 
 class Anthropic_Client(llm_client_base.LlmClientBase):
+    support_system_message: bool = True
+
     def __init__(self):
         super().__init__()
 
@@ -28,13 +30,21 @@ class Anthropic_Client(llm_client_base.LlmClientBase):
             api_key=api_key
         )
 
-    async def chat_stream_async(self, model_name, history, temperature, force_calc_token_num):
+    async def chat_stream_async(self, model_name, history, model_param, client_param):
+        temperature = model_param['temperature']
+
+        system_message_list = [m for m in history if m['role'] == 'system']
+        system_prompt = system_message_list[-1]['content'] if system_message_list else None
+
+        message_list = [m for m in history if m['role'] != 'system']
+
         current_message = None
         start_time = time.time()
         first_token_time = None
         async with self.client.messages.stream(
                 model=model_name,
-                messages=history,
+                messages=message_list,
+                system=system_prompt,
                 temperature=temperature,
                 max_tokens=1024 * 3,  # 必选项
         ) as stream:
@@ -59,7 +69,7 @@ class Anthropic_Client(llm_client_base.LlmClientBase):
             'accumulated_content': current_message.content[0].text,
             'finish_reason': current_message.stop_reason,
             'usage': usage,
-            'first_token_time': first_token_time - start_time,
+            'first_token_time': first_token_time - start_time if first_token_time else None,
             'completion_time': completion_time - start_time,
         }
 
@@ -73,10 +83,13 @@ if __name__ == '__main__':
     client = Anthropic_Client()
     model_name = "claude-3-haiku-20240307"
     history = [{"role": "user", "content": "Hello, how are you?"}]
-    temperature = 0.01
+
+    model_param = {
+        'temperature': 0.01,
+    }
 
     async def main():
-        async for chunk in client.chat_stream_async(model_name, history, temperature, force_calc_token_num=True):
+        async for chunk in client.chat_stream_async(model_name, history, model_param, client_param={}):
             print(chunk)
 
     asyncio.run(main())

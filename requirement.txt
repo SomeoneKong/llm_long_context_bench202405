@@ -1,7 +1,6 @@
 socksio
 tiktoken
 openai
-zhipuai
 google-generativeai
 anthropic
 qianfan
@@ -12,3 +11,4 @@ reka-api
 tencentcloud-sdk-python
 mistralai
 together
+volcengine-python-sdk[ark]

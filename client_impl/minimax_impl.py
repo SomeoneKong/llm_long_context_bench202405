@@ -14,6 +14,8 @@ import json
 
 
 class Minimax_Client(llm_client_base.LlmClientBase):
+    support_system_message: bool = False
+
     def __init__(self):
         super().__init__()
 
@@ -42,7 +44,9 @@ class Minimax_Client(llm_client_base.LlmClientBase):
 
                     yield chunk
 
-    async def chat_stream_async(self, model_name, history, temperature, force_calc_token_num):
+    async def chat_stream_async(self, model_name, history, model_param, client_param):
+        temperature = model_param['temperature']
+
         url = "https://api.minimax.chat/v1/text/chatcompletion_pro?GroupId=" + self.group_id
         headers = {
             'Content-Type': 'application/json',
@@ -125,7 +129,7 @@ class Minimax_Client(llm_client_base.LlmClientBase):
             'accumulated_content': result_buffer,
             'finish_reason': finish_reason,
             'usage': usage,
-            'first_token_time': first_token_time - start_time,
+            'first_token_time': first_token_time - start_time if first_token_time else None,
             'completion_time': completion_time - start_time,
         }
 
@@ -137,10 +141,13 @@ if __name__ == '__main__':
     client = Minimax_Client()
     model_name = "abab5.5-chat"
     history = [{"role": "user", "content": "Hello, how are you?"}]
-    temperature = 0.01
+
+    model_param = {
+        'temperature': 0.01,
+    }
 
     async def main():
-        async for chunk in client.chat_stream_async(model_name, history, temperature, force_calc_token_num=True):
+        async for chunk in client.chat_stream_async(model_name, history, model_param, client_param={}):
             print(chunk)
 
     asyncio.run(main())

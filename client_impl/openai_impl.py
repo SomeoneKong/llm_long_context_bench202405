@@ -17,6 +17,8 @@ from openai import AsyncOpenAI
 
 
 class OpenAI_Client(llm_client_base.LlmClientBase):
+    support_system_message: bool = True
+
     def __init__(self,
                  api_base_url=None,
                  api_key=None,
@@ -27,7 +29,10 @@ class OpenAI_Client(llm_client_base.LlmClientBase):
             api_key=api_key,
         )
 
-    async def chat_stream_async(self, model_name, history, temperature, force_calc_token_num):
+    async def chat_stream_async(self, model_name, history, model_param, client_param):
+        temperature = model_param['temperature']
+        force_calc_token_num = client_param.get('force_calc_token_num', False)
+
         start_time = time.time()
 
         system_fingerprint = None
@@ -75,7 +80,7 @@ class OpenAI_Client(llm_client_base.LlmClientBase):
             'finish_reason': finish_reason,
             'system_fingerprint': system_fingerprint,
             'usage': usage or {},
-            'first_token_time': first_token_time - start_time,
+            'first_token_time': first_token_time - start_time if first_token_time else None,
             'completion_time': completion_time - start_time,
         }
 
@@ -90,10 +95,13 @@ if __name__ == '__main__':
     client = OpenAI_Client()
     model_name = "gpt-3.5-turbo"
     history = [{"role": "user", "content": "Hello, how are you?"}]
-    temperature = 0.01
+
+    model_param = {
+        'temperature': 0.01,
+    }
 
     async def main():
-        async for chunk in client.chat_stream_async(model_name, history, temperature, force_calc_token_num=True):
+        async for chunk in client.chat_stream_async(model_name, history, model_param, client_param={}):
             print(chunk)
 
     asyncio.run(main())

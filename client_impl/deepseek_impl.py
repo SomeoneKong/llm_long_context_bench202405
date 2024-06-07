@@ -11,6 +11,8 @@ from .openai_impl import OpenAI_Client
 
 
 class DeepSeek_Client(OpenAI_Client):
+    support_system_message: bool = True
+
     def __init__(self):
         api_key = os.getenv('DEEPSEEK_API_KEY')
 
@@ -19,13 +21,13 @@ class DeepSeek_Client(OpenAI_Client):
             api_key=api_key,
         )
 
-    async def chat_stream_async(self, model_name, history, temperature, force_calc_token_num):
+    async def chat_stream_async(self, model_name, history, model_param, client_param):
         try:
-            async for chunk in super().chat_stream_async(model_name, history, temperature, force_calc_token_num):
+            async for chunk in super().chat_stream_async(model_name, history, model_param, client_param):
                 yield chunk
         except openai.BadRequestError as e:
             if 'Content Exists Risk' in e.message:
-                raise llm_client_base.SensitiveBlockError()
+                raise llm_client_base.SensitiveBlockError() from e
 
             raise
 
@@ -37,10 +39,13 @@ if __name__ == '__main__':
     client = DeepSeek_Client()
     model_name = "deepseek-chat"
     history = [{"role": "user", "content": "Hello, how are you?"}]
-    temperature = 0.01
+
+    model_param = {
+        'temperature': 0.01,
+    }
 
     async def main():
-        async for chunk in client.chat_stream_async(model_name, history, temperature, force_calc_token_num=True):
+        async for chunk in client.chat_stream_async(model_name, history, model_param, client_param={}):
             print(chunk)
 
     asyncio.run(main())

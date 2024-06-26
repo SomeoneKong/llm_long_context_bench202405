@@ -22,6 +22,7 @@ from client_impl.bytedance_impl import ByteDance_Client
 
 from client_impl.together_impl import Together_Client
 from client_impl.siliconflow_impl import SiliconFlow_Client
+from client_impl.huggingface_impl import HuggingfaceEndpoint_Client
 from client_impl.duckagi_impl import DuckAgi_Client
 
 
@@ -117,6 +118,8 @@ def test_128k():
 
     # client_factory, model_name, gap_time = SiliconFlow_Client, "deepseek-ai/deepseek-v2-chat", 10
 
+    client_factory, model_name, gap_time = Together_Client, "Qwen/Qwen2-72B-Instruct", 0
+
     # client_factory, model_name, gap_time = ByteDance_Client, "ep-xxxxx", max(60/1000, 60 / (400 / 120)), # doubao-lite-128k
 
     # client_factory, model_name, gap_time = ByteDance_Client, "ep-xxxxx", max(60/1000, 60 / (400 / 120)), # doubao-pro-128k
@@ -191,11 +194,12 @@ def test_32k():
 
     # client_factory, model_name, gap_time = Anthropic_Client, "claude-3-haiku-20240307", max(60/1000, 60 / (100 / 30))  # tier2
     # client_factory, model_name, gap_time = Anthropic_Client, "claude-3-sonnet-20240229", max(60/1000, 60 / (80 / 30))  # tier2
+    client_factory, model_name, gap_time = Anthropic_Client, "claude-3-5-sonnet-20240620", max(60/1000, 60 / (80 / 30))  # tier2
 
     # client_factory, model_name, gap_time = Reka_Client, "reka-core", 0
     # client_factory, model_name, gap_time = Reka_Client, "reka-flash", 0
 
-    client_factory, model_name, gap_time = Mistral_Client, "mistral-small-latest", 0
+    # client_factory, model_name, gap_time = Mistral_Client, "mistral-small-latest", 0
     # client_factory, model_name, gap_time = Mistral_Client, "mistral-medium-latest", 0
     # client_factory, model_name, gap_time = Mistral_Client, "mistral-large-latest", 0
     # client_factory, model_name, gap_time = Mistral_Client, "open-mixtral-8x22b", 0
@@ -228,6 +232,7 @@ def test_32k():
     # client_factory, model_name, gap_time = Minimax_Client, "abab6-chat", max(60/5000, 60 / (720 / 30))
 
     # client_factory, model_name = DeepSeek_Client, "deepseek-chat"
+    # client_factory, model_name = DeepSeek_Client, "deepseek-coder"
 
     # client_factory, model_name = SenseNova_Client, "SenseChat-32K"  # content blocked
     # client_factory, model_name = SenseNova_Client, "SenseChat-128K"  # content blocked
@@ -247,6 +252,8 @@ def test_32k():
     # client_factory, model_name, gap_time = Together_Client, "Qwen/Qwen1.5-32B-Chat", 60
     # client_factory, model_name, gap_time = Together_Client, "Qwen/Qwen1.5-14B-Chat", 60
 
+    # client_factory, model_name, gap_time = Together_Client, "Qwen/Qwen2-72B-Instruct", 0
+
     # client_factory, model_name, gap_time = SiliconFlow_Client, "deepseek-ai/deepseek-v2-chat", 10
 
     # client_factory, model_name, gap_time = ByteDance_Client, "ep-xxxxx", max(60/1000, 60 / (800 / 120)), # doubao-pro-32k
@@ -260,6 +267,8 @@ def test_32k():
     # client_factory, model_name, gap_time = SiliconFlow_Client, "alibaba/Qwen2-72B-Instruct", 0
     # client_factory, model_name, gap_time = SiliconFlow_Client, "alibaba/Qwen2-57B-A14B-Instruct", 0
     # client_factory, model_name, gap_time = SiliconFlow_Client, "alibaba/Qwen2-7B-Instruct", 0
+
+    # client_factory, model_name, gap_time = HuggingfaceEndpoint_Client, "qwen2-72b-instruct-ypn", 0
 
     test_file_list = [
         'test_case3v2_32k_sample1.txt',

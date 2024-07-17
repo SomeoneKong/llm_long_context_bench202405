@@ -12,9 +12,6 @@ from openai import AsyncOpenAI
 # HTTP_PROXY
 # HTTPS_PROXY
 
-# os.environ['HTTP_PROXY'] = "http://127.0.0.1:7890/"
-# os.environ['HTTPS_PROXY'] = "http://127.0.0.1:7890/"
-
 
 class OpenAI_Client(llm_client_base.LlmClientBase):
     support_system_message: bool = True
@@ -32,6 +29,7 @@ class OpenAI_Client(llm_client_base.LlmClientBase):
     async def chat_stream_async(self, model_name, history, model_param, client_param):
         temperature = model_param['temperature']
         force_calc_token_num = client_param.get('force_calc_token_num', False)
+        json_mode = client_param.get('json_mode', False)
 
         start_time = time.time()
 
@@ -42,14 +40,17 @@ class OpenAI_Client(llm_client_base.LlmClientBase):
         usage = None
         first_token_time = None
 
-        async with await self.client.chat.completions.create(
+        req_args = dict(
             model=model_name,
             messages=history,
             temperature=temperature,
             stream=True,
             stream_options={'include_usage': True},
-        ) as response:
+        )
+        if json_mode:
+            req_args['response_format'] = {"type": "json_object"}
 
+        async with await self.client.chat.completions.create(**req_args) as response:
             async for chunk in response:
                 system_fingerprint = chunk.system_fingerprint
                 if chunk.choices:
@@ -92,12 +93,16 @@ if __name__ == '__main__':
     import asyncio
     import os
 
-    client = OpenAI_Client()
+    os.environ['HTTP_PROXY'] = "http://127.0.0.1:7890/"
+    os.environ['HTTPS_PROXY'] = "http://127.0.0.1:7890/"
+
+    client = OpenAI_Client(api_key=os.getenv('OPENAI_API_KEY'))
     model_name = "gpt-3.5-turbo"
     history = [{"role": "user", "content": "Hello, how are you?"}]
 
     model_param = {
         'temperature': 0.01,
+        # 'json_mode': True,
     }
 
     async def main():

@@ -13,6 +13,8 @@ from sparkai.core.messages import ChatMessage
 # SPARKAI_API_KEY
 # SPARKAI_API_SECRET
 
+# https://www.xfyun.cn/doc/spark/Web.html
+
 
 class Xunfei_Client(llm_client_base.LlmClientBase):
     support_system_message: bool = True
@@ -38,7 +40,10 @@ class Xunfei_Client(llm_client_base.LlmClientBase):
         assert model_name.startswith('spark-')
         model_version = model_name[len('spark-'):]
 
-        url = f"wss://spark-api.xf-yun.com/v{model_version}/chat"
+        if model_version in ['1.5', '2.0', '3.0', '3.5', '4.0']:
+            url = f"wss://spark-api.xf-yun.com/v{model_version}/chat"
+        elif model_version == '3.0-128k':
+            url = f"wss://spark-api.xf-yun.com/chat/pro-128k"
 
         start_time = time.time()
         spark = ChatSparkLLM(

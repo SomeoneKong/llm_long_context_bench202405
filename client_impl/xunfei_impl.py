@@ -5,6 +5,7 @@ import time
 
 import llm_client_base
 
+import sparkai
 from sparkai.llm.llm import ChatSparkLLM
 from sparkai.core.messages import ChatMessage
 
@@ -12,6 +13,8 @@ from sparkai.core.messages import ChatMessage
 # SPARKAI_APP_ID
 # SPARKAI_API_KEY
 # SPARKAI_API_SECRET
+
+# https://www.xfyun.cn/doc/spark/Web.html
 
 
 class Xunfei_Client(llm_client_base.LlmClientBase):
@@ -38,7 +41,12 @@ class Xunfei_Client(llm_client_base.LlmClientBase):
         assert model_name.startswith('spark-')
         model_version = model_name[len('spark-'):]
 
-        url = f"wss://spark-api.xf-yun.com/v{model_version}/chat"
+        if model_version in ['1.5', '2.0', '3.0', '3.5', '4.0']:
+            url = f"wss://spark-api.xf-yun.com/v{model_version}/chat"
+        elif model_version == '3.0-128k':
+            url = f"wss://spark-api.xf-yun.com/chat/pro-128k"
+        else:
+            assert False, f"Unsupported model version: {model_version}"
 
         start_time = time.time()
         spark = ChatSparkLLM(
@@ -60,22 +68,28 @@ class Xunfei_Client(llm_client_base.LlmClientBase):
         usage = None
         first_token_time = None
 
-        async for message in a:
-            # print(message)
-            delta = message.content
-            if 'token_usage' in message.additional_kwargs:
-                usage = message.additional_kwargs['token_usage']
-                del usage['question_tokens']
+        try:
+            async for message in a:
+                # print(message)
+                delta = message.content
+                if 'token_usage' in message.additional_kwargs:
+                    usage = message.additional_kwargs['token_usage']
+                    del usage['question_tokens']
 
-            result_buffer += delta
-            if delta:
-                if first_token_time is None:
-                    first_token_time = time.time()
-                yield {
-                    'role': role,
-                    'delta_content': delta,
-                    'accumulated_content': result_buffer,
-                }
+                result_buffer += delta
+                if delta:
+                    if first_token_time is None:
+                        first_token_time = time.time()
+                    yield {
+                        'role': role,
+                        'delta_content': delta,
+                        'accumulated_content': result_buffer,
+                    }
+        except sparkai.errors.SparkAIConnectionError as e:
+            if e.error_code in [10013, 10014]:
+                raise llm_client_base.SensitiveBlockError() from e
+
+            raise
 
         completion_time = time.time()
 

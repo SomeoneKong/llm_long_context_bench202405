@@ -34,7 +34,7 @@ class Anthropic_Client(llm_client_base.LlmClientBase):
         temperature = model_param['temperature']
 
         system_message_list = [m for m in history if m['role'] == 'system']
-        system_prompt = system_message_list[-1]['content'] if system_message_list else None
+        system_prompt = system_message_list[-1]['content'] if system_message_list else []
 
         message_list = [m for m in history if m['role'] != 'system']
 

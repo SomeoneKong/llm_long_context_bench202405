@@ -40,6 +40,7 @@ class Alibaba_Client(llm_client_base.LlmClientBase):
 
         async for chunk_resp in stream_response:
             chunk = chunk_resp['output']
+            assert chunk is not None, f"chunk is None: {chunk_resp}"
 
             usage = chunk_resp['usage']
             if usage:

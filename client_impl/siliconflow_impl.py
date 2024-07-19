@@ -9,6 +9,8 @@ from .openai_impl import OpenAI_Client
 # config from .env
 # SILICONFLOW_API_KEY
 
+# https://siliconflow.cn/zh-cn/pricing
+
 
 class SiliconFlow_Client(OpenAI_Client):
     support_system_message: bool = True

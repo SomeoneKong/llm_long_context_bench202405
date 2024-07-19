@@ -77,6 +77,7 @@ async def run_test(client_factory, model_name, prompt):
         'first_token_time': chunk['first_token_time'],
         'total_time': chunk['completion_time'],
         'real_model': chunk.get('real_model'),
+        'system_fingerprint': chunk.get('system_fingerprint'),
     }
     if usage and 'completion_tokens' in usage and chunk['completion_time'] > chunk['first_token_time']:
         ret['token_speed'] = usage['completion_tokens'] / (chunk['completion_time'] - chunk['first_token_time'])
@@ -90,9 +91,8 @@ def test_128k():
     client_factory, model_name = Gemini_Client, "gemini-1.5-flash"
     # client_factory, model_name = Gemini_Client, "gemini-1.5-pro"
 
-    client_factory, model_name = OpenAI_Client, "gpt-4o"
-    # client_factory, model_name = OpenAI_Client, "gpt-4o-mini-2024-07-18"
-    # client_factory, model_name = OpenAI_Client, "gpt-4-0125-preview"
+    # client_factory, model_name = OpenAI_Client, "gpt-4o"
+    client_factory, model_name = OpenAI_Client, "gpt-4o-mini-2024-07-18"
     # client_factory, model_name, gap_time = OpenRouter_Client, "openai/gpt-4o", 0
     # client_factory, model_name, gap_time = OpenRouter_Client, "openai/gpt-4o-mini-2024-07-18", 0
 
@@ -193,6 +193,8 @@ def test_128k():
                 token_speed_list.append(result["token_speed"])
             if 'real_model' in result:
                 real_model_list.append(result['real_model'])
+            if result.get("system_fingerprint", ""):
+                print(f'system_fingerprint: {result.get("system_fingerprint", "")}')
 
             if gap_time > 0:
                 sleep_time = max(3, gap_time - (time.time() - start_time))
@@ -222,8 +224,7 @@ def test_32k():
     # client_factory, model_name = Gemini_Client, "gemini-1.5-pro"
 
     # client_factory, model_name = OpenAI_Client, "gpt-4o"
-    # client_factory, model_name = OpenAI_Client, "gpt-4o-mini"
-    # client_factory, model_name = OpenAI_Client, "gpt-4o-mini-2024-07-18"
+    client_factory, model_name = OpenAI_Client, "gpt-4o-mini-2024-07-18"
     # client_factory, model_name, gap_time = OpenRouter_Client, "openai/gpt-4o", 0
     # client_factory, model_name, gap_time = OpenRouter_Client, "openai/gpt-4o-mini-2024-07-18", 0
 
@@ -345,8 +346,6 @@ def test_32k():
             if 'real_model' in result:
                 real_model_list.append(result['real_model'])
 
-
-
             if gap_time > 0:
                 sleep_time = max(3, gap_time - (time.time() - start_time))
                 time.sleep(sleep_time)
@@ -375,4 +374,4 @@ if __name__ == '__main__':
 
     test_128k()
 
-    # test_32k()
+    test_32k()

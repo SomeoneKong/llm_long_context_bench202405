@@ -76,6 +76,7 @@ async def run_test(client_factory, model_name, prompt):
         'finish_reason': chunk['finish_reason'],
         'first_token_time': chunk['first_token_time'],
         'total_time': chunk['completion_time'],
+        'real_model': chunk.get('real_model'),
     }
     if usage and 'completion_tokens' in usage and chunk['completion_time'] > chunk['first_token_time']:
         ret['token_speed'] = usage['completion_tokens'] / (chunk['completion_time'] - chunk['first_token_time'])
@@ -89,10 +90,11 @@ def test_128k():
     client_factory, model_name = Gemini_Client, "gemini-1.5-flash"
     # client_factory, model_name = Gemini_Client, "gemini-1.5-pro"
 
-    # client_factory, model_name = OpenAI_Client, "gpt-4o"
+    client_factory, model_name = OpenAI_Client, "gpt-4o"
+    # client_factory, model_name = OpenAI_Client, "gpt-4o-mini-2024-07-18"
     # client_factory, model_name = OpenAI_Client, "gpt-4-0125-preview"
-    # client_factory, model_name, gap_time = OpenRouter_Client, "gpt-4o", 0
-    # client_factory, model_name, gap_time = OpenRouter_Client, "gpt-4o-mini", 0
+    # client_factory, model_name, gap_time = OpenRouter_Client, "openai/gpt-4o", 0
+    # client_factory, model_name, gap_time = OpenRouter_Client, "openai/gpt-4o-mini-2024-07-18", 0
 
     # client_factory, model_name, gap_time = Anthropic_Client, "claude-3-sonnet-20240229", max(60/1000, 60 / (80 / 120))  # tier2 # TPD 太低
     # client_factory, model_name, gap_time = Anthropic_Client, "claude-3-haiku-20240307", max(60/1000, 60 / (100 / 120))  # tier2 # TPD 太低
@@ -163,6 +165,7 @@ def test_128k():
         success_num = 0
         first_token_time_list = []
         token_speed_list = []
+        real_model_list = []
         prompt_token = None
         for i in range(output_sample_num):
             print(f'-------------- {test_file} {i}--------------')
@@ -188,6 +191,8 @@ def test_128k():
             if 'token_speed' in result:
                 print(f'token speed: {result["token_speed"]}')
                 token_speed_list.append(result["token_speed"])
+            if 'real_model' in result:
+                real_model_list.append(result['real_model'])
 
             if gap_time > 0:
                 sleep_time = max(3, gap_time - (time.time() - start_time))
@@ -206,6 +211,9 @@ def test_128k():
             avg_token_speed = sum(stat_token_speed_list) / len(stat_token_speed_list)
             print(f'avg_token_speed: {avg_token_speed}, {token_speed_list}')
 
+        if real_model_list:
+            print(f'real_model: {real_model_list}')
+
 
 def test_32k():
     gap_time = 0
@@ -214,8 +222,10 @@ def test_32k():
     # client_factory, model_name = Gemini_Client, "gemini-1.5-pro"
 
     # client_factory, model_name = OpenAI_Client, "gpt-4o"
-    # client_factory, model_name, gap_time = OpenRouter_Client, "gpt-4o", 0
-    # client_factory, model_name, gap_time = OpenRouter_Client, "gpt-4o-mini", 0
+    # client_factory, model_name = OpenAI_Client, "gpt-4o-mini"
+    # client_factory, model_name = OpenAI_Client, "gpt-4o-mini-2024-07-18"
+    # client_factory, model_name, gap_time = OpenRouter_Client, "openai/gpt-4o", 0
+    # client_factory, model_name, gap_time = OpenRouter_Client, "openai/gpt-4o-mini-2024-07-18", 0
 
     # client_factory, model_name, gap_time = Anthropic_Client, "claude-3-haiku-20240307", max(60/1000, 60 / (100 / 30))  # tier2
     # client_factory, model_name, gap_time = Anthropic_Client, "claude-3-sonnet-20240229", max(60/1000, 60 / (80 / 30))  # tier2
@@ -307,6 +317,7 @@ def test_32k():
         success_num = 0
         first_token_time_list = []
         token_speed_list = []
+        real_model_list = []
         prompt_token = None
         for i in range(output_sample_num):
             print(f'-------------- {test_file} {i}--------------')
@@ -331,6 +342,10 @@ def test_32k():
             if 'token_speed' in result:
                 print(f'token speed: {result["token_speed"]}')
                 token_speed_list.append(result["token_speed"])
+            if 'real_model' in result:
+                real_model_list.append(result['real_model'])
+
+
 
             if gap_time > 0:
                 sleep_time = max(3, gap_time - (time.time() - start_time))
@@ -349,12 +364,15 @@ def test_32k():
             avg_token_speed = sum(stat_token_speed_list) / len(stat_token_speed_list)
             print(f'avg_token_speed: {avg_token_speed}, {token_speed_list}')
 
+        if real_model_list:
+            print(f'real_model: {real_model_list}')
+
 
 if __name__ == '__main__':
     import os
-    # os.environ['HTTP_PROXY'] = "http://127.0.0.1:7890/"
-    # os.environ['HTTPS_PROXY'] = "http://127.0.0.1:7890/"
+    os.environ['HTTP_PROXY'] = "http://127.0.0.1:7890/"
+    os.environ['HTTPS_PROXY'] = "http://127.0.0.1:7890/"
 
-    # test_128k()
+    test_128k()
 
-    test_32k()
+    # test_32k()

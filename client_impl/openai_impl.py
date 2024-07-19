@@ -39,6 +39,7 @@ class OpenAI_Client(llm_client_base.LlmClientBase):
         finish_reason = None
         usage = None
         first_token_time = None
+        real_model = None
 
         req_args = dict(
             model=model_name,
@@ -71,6 +72,8 @@ class OpenAI_Client(llm_client_base.LlmClientBase):
                         }
                 if chunk.usage:
                     usage = chunk.usage.dict()
+                if chunk.model:
+                    real_model = chunk.model
 
 
         completion_time = time.time()
@@ -80,6 +83,7 @@ class OpenAI_Client(llm_client_base.LlmClientBase):
             'accumulated_content': result_buffer,
             'finish_reason': finish_reason,
             'system_fingerprint': system_fingerprint,
+            'real_model': real_model,
             'usage': usage or {},
             'first_token_time': first_token_time - start_time if first_token_time else None,
             'completion_time': completion_time - start_time,

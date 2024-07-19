@@ -19,7 +19,7 @@ import google.generativeai as genai
 
 
 class Gemini_Client(llm_client_base.LlmClientBase):
-    support_system_message: bool = False
+    support_system_message: bool = True
 
     def __init__(self):
         super().__init__()
@@ -50,15 +50,17 @@ class Gemini_Client(llm_client_base.LlmClientBase):
         force_calc_token_num = client_param.get('force_calc_token_num', False)
 
         system_message_list = [m for m in history if m['role'] == 'system']
-        assert len(system_message_list) == 0, "Google Gemini does not support system messages"
 
-        model = genai.GenerativeModel(model_name)
+        system_instruction = system_message_list[0]['content'] if system_message_list else None
+        model = genai.GenerativeModel(model_name, system_instruction=system_instruction)
         generation_config = genai.types.GenerationConfig(
             temperature=temperature)
         messages = [{
             'role': self.role_convert_from_openai(m['role']),
             'parts': [m['content']]
-        } for m in history]
+        } for m in history
+            if m['role'] != 'system'
+        ]
 
         start_time = time.time()
 
@@ -113,7 +115,10 @@ if __name__ == '__main__':
 
     client = Gemini_Client()
     model_name = "gemini-1.5-pro-latest"
-    history = [{"role": "user", "content": "Hello, how are you?"}]
+    history = [
+        # {"role": "system", "content": "You are an assistant for home cooks. "},
+        {"role": "user", "content": "Hello, how are you?"},
+    ]
 
     model_param = {
         'temperature': 0.01,

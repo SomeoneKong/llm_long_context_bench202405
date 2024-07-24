@@ -92,14 +92,16 @@ def test_128k():
     # client_factory, model_name = Gemini_Client, "gemini-1.5-pro"
 
     # client_factory, model_name = OpenAI_Client, "gpt-4o"
-    client_factory, model_name = OpenAI_Client, "gpt-4o-mini-2024-07-18"
+    # client_factory, model_name = OpenAI_Client, "gpt-4o-mini-2024-07-18"
     # client_factory, model_name, gap_time = OpenRouter_Client, "openai/gpt-4o", 0
-    # client_factory, model_name, gap_time = OpenRouter_Client, "openai/gpt-4o-mini-2024-07-18", 0
+    client_factory, model_name, gap_time = OpenRouter_Client, "openai/gpt-4o-mini", 0
 
     # client_factory, model_name, gap_time = Anthropic_Client, "claude-3-sonnet-20240229", max(60/1000, 60 / (80 / 120))  # tier2 # TPD 太低
     # client_factory, model_name, gap_time = Anthropic_Client, "claude-3-haiku-20240307", max(60/1000, 60 / (100 / 120))  # tier2 # TPD 太低
     # client_factory, model_name, gap_time = OpenRouter_Client, "anthropic/claude-3-haiku", 0
     # client_factory, model_name, gap_time = OpenRouter_Client, "anthropic/claude-3.5-sonnet", 0
+
+    # client_factory, model_name, gap_time = OpenRouter_Client, "meta-llama/llama-3.1-405b-instruct|Fireworks", 0
 
     # client_factory, model_name, gap_time = Reka_Client, "reka-core", 60
     # client_factory, model_name, gap_time = Reka_Client, "reka-flash", 0
@@ -109,7 +111,6 @@ def test_128k():
     # client_factory, model_name, gap_time = OpenRouter_Client, "cohere/command-r-plus", 0
 
 
-    # client_factory, model_name, gap_time = Zhipu_Client, "glm-3-turbo", 0
     # client_factory, model_name, gap_time = Zhipu_Client, "glm-4", 0
     # client_factory, model_name, gap_time = Zhipu_Client, "glm-4-air", 0
     # client_factory, model_name, gap_time = Zhipu_Client, "glm-4-airx", 0
@@ -145,6 +146,8 @@ def test_128k():
 
     # client_factory, model_name, gap_time = Alibaba_Client, "qwen2-72b-instruct", 0
     # client_factory, model_name, gap_time = Alibaba_Client, "qwen2-7b-instruct", 0
+
+    # client_factory, model_name, gap_time = Mistral_Client, "open-mistral-nemo-latest", 0
 
     test_file_list = [
         'test_case3v2_128k_sample1.txt',
@@ -241,6 +244,7 @@ def test_32k():
     # client_factory, model_name, gap_time = Mistral_Client, "mistral-small-latest", 0
     # client_factory, model_name, gap_time = Mistral_Client, "mistral-medium-latest", 0
     # client_factory, model_name, gap_time = Mistral_Client, "mistral-large-latest", 0
+    # client_factory, model_name, gap_time = Mistral_Client, "open-mistral-nemo-2407", 0
     # client_factory, model_name, gap_time = Mistral_Client, "open-mixtral-8x22b", 0
     # client_factory, model_name, gap_time = Mistral_Client, "open-mixtral-8x7b", 0
     # client_factory, model_name, gap_time = Mistral_Client, "open-mistral-7b", 0
@@ -250,7 +254,6 @@ def test_32k():
     # client_factory, model_name, gap_time = OpenRouter_Client, "cohere/command-r-plus", 0
 
 
-    # client_factory, model_name, gap_time = Zhipu_Client, "glm-3-turbo", 0
     # client_factory, model_name, gap_time = Zhipu_Client, "glm-4", 0
     # client_factory, model_name, gap_time = Zhipu_Client, "glm-4-air", 0
     # client_factory, model_name, gap_time = Zhipu_Client, "glm-4-flash", 0
@@ -374,4 +377,4 @@ if __name__ == '__main__':
 
     test_128k()
 
-    test_32k()
+    # test_32k()

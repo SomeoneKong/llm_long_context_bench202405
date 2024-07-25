@@ -27,7 +27,8 @@ class OpenAI_Client(llm_client_base.LlmClientBase):
         )
 
     async def chat_stream_async(self, model_name, history, model_param, client_param):
-        temperature = model_param['temperature']
+        temperature = model_param.pop('temperature')
+        max_tokens = model_param.pop('max_tokens', None)
         force_calc_token_num = client_param.get('force_calc_token_num', False)
         json_mode = client_param.get('json_mode', False)
 
@@ -50,6 +51,10 @@ class OpenAI_Client(llm_client_base.LlmClientBase):
         )
         if json_mode:
             req_args['response_format'] = {"type": "json_object"}
+        if max_tokens:
+            req_args['max_tokens'] = max_tokens
+        if model_param:
+            req_args['extra_body'] = model_param
 
         async with await self.client.chat.completions.create(**req_args) as response:
             async for chunk in response:

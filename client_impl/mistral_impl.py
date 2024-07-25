@@ -24,7 +24,8 @@ class Mistral_Client(llm_client_base.LlmClientBase):
         self.client = MistralAsyncClient(api_key=api_key)
 
     async def chat_stream_async(self, model_name, history, model_param, client_param):
-        temperature = model_param['temperature']
+        temperature = model_param.pop('temperature')
+        max_tokens = model_param.pop('max_tokens', None)
 
         message_list = [
             ChatMessage(role=message['role'], content=message['content'])
@@ -36,7 +37,8 @@ class Mistral_Client(llm_client_base.LlmClientBase):
         async_response = self.client.chat_stream(
             model=model_name,
             messages=message_list,
-            temperature=temperature
+            temperature=temperature,
+            max_tokens=max_tokens
         )
 
         role = None

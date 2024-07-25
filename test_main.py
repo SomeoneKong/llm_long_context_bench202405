@@ -34,6 +34,7 @@ async def run_test(client_factory, model_name, prompt):
 
     model_param = {
         'temperature': temperature,
+        'max_tokens': 512
     }
     client_param = {
         'force_calc_token_num': True,

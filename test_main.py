@@ -2,6 +2,8 @@ import asyncio
 import time
 import random
 
+import httpx
+
 from client_impl.openai_impl import OpenAI_Client
 from client_impl.google_impl import Gemini_Client
 from client_impl.anthropic_impl import Anthropic_Client
@@ -57,10 +59,12 @@ async def run_test(client_factory, model_name, prompt):
             break
         except Exception as e:
             if retry_idx < 4:
-                # print traceback
                 import traceback
-                traceback.print_exc()
-                print(f'Error: {e}, retrying...')
+                if isinstance(e, httpx.RemoteProtocolError):
+                    print(f'RemoteProtocolError: {e}, retrying...')
+                else:
+                    traceback.print_exc()
+                    print(f'Error: {e}, retrying...')
                 time.sleep(3)
                 continue
 
@@ -343,7 +347,8 @@ def test_32k():
             if 'rate_limit_info' in result:
                 print(f'rate_limit_info: {result["rate_limit_info"]}')
             print(f'first token time: {result["first_token_time"]}')
-            first_token_time_list.append(result["first_token_time"])
+            if result["first_token_time"] is not None:
+                first_token_time_list.append(result["first_token_time"])
             if 'token_speed' in result:
                 print(f'token speed: {result["token_speed"]}')
                 token_speed_list.append(result["token_speed"])

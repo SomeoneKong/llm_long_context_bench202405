@@ -2,6 +2,7 @@
 
 import os
 import time
+import asyncio
 
 import llm_client_base
 
@@ -62,6 +63,8 @@ class Xunfei_Client(llm_client_base.LlmClientBase):
 
         a = spark.astream(messages)
 
+        await asyncio.sleep(0)
+
         role = 'assistant'
         finish_reason = 'stop'
         result_buffer = ''
@@ -85,6 +88,9 @@ class Xunfei_Client(llm_client_base.LlmClientBase):
                         'delta_content': delta,
                         'accumulated_content': result_buffer,
                     }
+
+                await asyncio.sleep(0)
+
         except sparkai.errors.SparkAIConnectionError as e:
             if e.error_code in [10013, 10014]:
                 raise llm_client_base.SensitiveBlockError() from e

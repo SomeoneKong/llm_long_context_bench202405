@@ -5,8 +5,7 @@ import time
 
 import llm_client_base
 
-from mistralai.async_client import MistralAsyncClient
-from mistralai.models.chat_completion import ChatMessage
+from mistralai import Mistral
 
 # config from .env
 # MISTRAL_API_KEY
@@ -21,24 +20,19 @@ class Mistral_Client(llm_client_base.LlmClientBase):
         api_key = os.getenv('MISTRAL_API_KEY')
         assert api_key is not None
 
-        self.client = MistralAsyncClient(api_key=api_key)
+        self.client = Mistral(api_key=api_key)
 
     async def chat_stream_async(self, model_name, history, model_param, client_param):
         temperature = model_param.pop('temperature')
         max_tokens = model_param.pop('max_tokens', None)
 
-        message_list = [
-            ChatMessage(role=message['role'], content=message['content'])
-            for message in history
-        ]
-
         start_time = time.time()
 
-        async_response = self.client.chat_stream(
+        async_response = await self.client.chat.stream_async(
             model=model_name,
-            messages=message_list,
+            messages=history,
             temperature=temperature,
-            max_tokens=max_tokens
+            max_tokens=max_tokens,
         )
 
         role = None
@@ -47,14 +41,15 @@ class Mistral_Client(llm_client_base.LlmClientBase):
         usage = None
         first_token_time = None
 
-        async for chunk in async_response:
+        async for chunk_resp in async_response:
+            chunk = chunk_resp.data
             choice0 = chunk.choices[0]
 
             if choice0.delta.content:
                 if first_token_time is None:
                     first_token_time = time.time()
             if choice0.finish_reason:
-                finish_reason = choice0.finish_reason.name
+                finish_reason = choice0.finish_reason
             if chunk.usage:
                 usage = chunk.usage.dict()
 

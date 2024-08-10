@@ -1,6 +1,7 @@
 import json
 import os
 import time
+import asyncio
 
 import llm_client_base
 
@@ -29,13 +30,17 @@ class Tencent_Client(llm_client_base.LlmClientBase):
 
     async def chat_stream_async(self, model_name, history, model_param, client_param):
         temperature = model_param['temperature']
+        enable_search = model_param.get('enable_search', False)
+
+        # 通过插入sleep来把同步API拆分成接近异步的API
+        await asyncio.sleep(0)
 
         start_time = time.time()
 
         cpf = ClientProfile(httpProfile=HttpProfile(reqTimeout=600))
-        # 预先建立连接可以降低访问延迟
-        cpf.httpProfile.pre_conn_pool_size = 1
         client = hunyuan_client.HunyuanClient(self.cred, "ap-guangzhou", cpf)
+
+        await asyncio.sleep(0)
 
         req = models.ChatCompletionsRequest()
         req.Model = model_name
@@ -49,13 +54,21 @@ class Tencent_Client(llm_client_base.LlmClientBase):
             message.append(msg)
         req.Messages = message
 
+        if enable_search:
+            req.SearchInfo = True
+            req.Citation = True
+            req.EnableEnhancement = True
+
         req.Stream = True
         resp = client.ChatCompletions(req)
+
+        await asyncio.sleep(0)
 
         result_buffer = ''
         usage = None
         role = None
         finish_reason = None
+        search_results = None
         first_token_time = None
 
         for chunk_resp in resp:
@@ -65,6 +78,9 @@ class Tencent_Client(llm_client_base.LlmClientBase):
                 'prompt_tokens': usage['PromptTokens'],
                 'completion_tokens': usage['CompletionTokens'],
             }
+
+            if 'SearchInfo' in chunk:
+                search_results = chunk['SearchInfo']['SearchResults']
 
             choice0 = chunk['Choices'][0]
 
@@ -82,7 +98,10 @@ class Tencent_Client(llm_client_base.LlmClientBase):
                     'delta_content': choice0['Delta']['Content'],
                     'accumulated_content': result_buffer,
                     'usage': usage,
+                    'search_results': search_results,
                 }
+
+            await asyncio.sleep(0)
 
         completion_time = time.time()
 
@@ -90,6 +109,7 @@ class Tencent_Client(llm_client_base.LlmClientBase):
             'role': role,
             'accumulated_content': result_buffer,
             'finish_reason': finish_reason,
+            'search_results': search_results,
             'usage': usage,
             'first_token_time': first_token_time - start_time if first_token_time else None,
             'completion_time': completion_time - start_time,

@@ -29,6 +29,7 @@ class OpenAI_Client(llm_client_base.LlmClientBase):
     async def chat_stream_async(self, model_name, history, model_param, client_param):
         temperature = model_param.pop('temperature')
         max_tokens = model_param.pop('max_tokens', None)
+        tools = model_param.pop('tools', None)
         force_calc_token_num = client_param.get('force_calc_token_num', False)
         json_mode = client_param.get('json_mode', False)
 
@@ -53,28 +54,32 @@ class OpenAI_Client(llm_client_base.LlmClientBase):
             req_args['response_format'] = {"type": "json_object"}
         if max_tokens:
             req_args['max_tokens'] = max_tokens
+        if tools:
+            req_args['tools'] = tools
         if model_param:
             req_args['extra_body'] = model_param
 
         async with await self.client.chat.completions.create(**req_args) as response:
             async for chunk in response:
+                # print(chunk)
                 system_fingerprint = chunk.system_fingerprint
                 if chunk.choices:
                     finish_reason = chunk.choices[0].finish_reason
                     delta_info = chunk.choices[0].delta
-                    if delta_info.role:
-                        role = delta_info.role
-                    if delta_info.content:
-                        result_buffer += delta_info.content
+                    if delta_info:
+                        if delta_info.role:
+                            role = delta_info.role
+                        if delta_info.content:
+                            result_buffer += delta_info.content
 
-                        if first_token_time is None:
-                            first_token_time = time.time()
+                            if first_token_time is None:
+                                first_token_time = time.time()
 
-                        yield {
-                            'role': role,
-                            'delta_content': delta_info.content,
-                            'accumulated_content': result_buffer,
-                        }
+                            yield {
+                                'role': role,
+                                'delta_content': delta_info.content,
+                                'accumulated_content': result_buffer,
+                            }
                 if chunk.usage:
                     usage = chunk.usage.dict()
                 if chunk.model:

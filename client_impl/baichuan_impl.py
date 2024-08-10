@@ -21,6 +21,14 @@ class Baichuan_Client(OpenAI_Client):
             api_key=api_key,
         )
 
+    async def chat_stream_async(self, model_name, history, model_param, client_param):
+        async for chunk in super().chat_stream_async(model_name, history, model_param, client_param):
+            usage = chunk.get('usage', {})
+            if usage.get('completion_tokens', None) == 0:
+                assert False, f"Baichuan return empty"
+
+            yield chunk
+
 
 if __name__ == '__main__':
     import asyncio

@@ -24,6 +24,7 @@ class Reka_Client(llm_client_base.LlmClientBase):
         self.client = AsyncReka(api_key=api_key)
 
     async def chat_stream_async(self, model_name, history, model_param, client_param):
+        model_param = model_param.copy()
         temperature = model_param['temperature']
 
         message_list = []

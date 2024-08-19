@@ -30,6 +30,7 @@ class Xunfei_Client(llm_client_base.LlmClientBase):
         assert self.api_key is not None
 
     async def chat_stream_async(self, model_name, history, model_param, client_param):
+        model_param = model_param.copy()
         temperature = model_param['temperature']
 
         messages = []

@@ -29,6 +29,7 @@ class Tencent_Client(llm_client_base.LlmClientBase):
         self.cred = credential.Credential(secret_id, secret_key)
 
     async def chat_stream_async(self, model_name, history, model_param, client_param):
+        model_param = model_param.copy()
         temperature = model_param['temperature']
         enable_search = model_param.get('enable_search', False)
 

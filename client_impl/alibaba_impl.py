@@ -22,6 +22,7 @@ class Alibaba_Client(OpenAI_Client):
         )
 
     async def chat_stream_async(self, model_name, history, model_param, client_param):
+        model_param = model_param.copy()
         if model_name in ['qwen-turbo', 'qwen-plus', 'qwen-max'] and 'max_tokens' in model_param:
             model_param['max_tokens'] = min(2000, model_param['max_tokens'])
 

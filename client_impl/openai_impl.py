@@ -27,10 +27,10 @@ class OpenAI_Client(llm_client_base.LlmClientBase):
         )
 
     async def chat_stream_async(self, model_name, history, model_param, client_param):
+        model_param = model_param.copy()
         temperature = model_param.pop('temperature')
         max_tokens = model_param.pop('max_tokens', None)
         tools = model_param.pop('tools', None)
-        force_calc_token_num = client_param.get('force_calc_token_num', False)
         json_mode = client_param.get('json_mode', False)
 
         start_time = time.time()
@@ -111,7 +111,7 @@ if __name__ == '__main__':
     os.environ['HTTPS_PROXY'] = "http://127.0.0.1:7890/"
 
     client = OpenAI_Client(api_key=os.getenv('OPENAI_API_KEY'))
-    model_name = "gpt-3.5-turbo"
+    model_name = "gpt-4o-mini"
     history = [{"role": "user", "content": "Hello, how are you?"}]
 
     model_param = {

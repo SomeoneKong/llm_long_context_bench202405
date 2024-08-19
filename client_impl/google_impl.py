@@ -46,6 +46,7 @@ class Gemini_Client(llm_client_base.LlmClientBase):
             return 'unknown'
 
     async def chat_stream_async(self, model_name, history, model_param, client_param):
+        model_param = model_param.copy()
         temperature = model_param['temperature']
         force_calc_token_num = client_param.get('force_calc_token_num', False)
 

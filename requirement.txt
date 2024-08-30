@@ -10,3 +10,4 @@ reka-api
 mistralai
 together
 scipy
+cohere

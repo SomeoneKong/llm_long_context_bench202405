@@ -1,6 +1,6 @@
 # llm_long_context_bench202405
 
-本项目中的LLM已经接近停止维护，请使用新的独立项目：
+本项目中的LLM client已经接近停止维护，请使用新的独立项目：
 [llm_client_wrapper](https://github.com/SomeoneKong/llm_client_wrapper)
 
 # 简介

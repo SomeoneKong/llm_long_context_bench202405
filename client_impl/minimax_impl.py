@@ -22,6 +22,10 @@ class Minimax_Client(OpenAI_Client):
         )
 
     async def chat_stream_async(self, model_name, history, model_param, client_param):
+        temp_model_param = model_param.copy()
+        if 'max_tokens' not in temp_model_param:
+            temp_model_param['max_tokens'] = 2048  # 官方默认值为256，太短
+
         async for chunk in super().chat_stream_async(model_name, history, model_param, client_param):
             if 'finish_reason' in chunk:
                 assert chunk.get('first_token_time', None) is not None, f"minimax return empty"
@@ -35,13 +39,13 @@ if __name__ == '__main__':
 
     client = Minimax_Client()
     model_name = "abab6.5s-chat"
-    history = [{"role": "user", "content": "Hello, how are you?"}]
 
     model_param = {
         'temperature': 0.01,
     }
 
     async def main():
+        history = [{"role": "user", "content": "Hello, how are you?"}]
         async for chunk in client.chat_stream_async(model_name, history, model_param, client_param={}):
             print(chunk)
 

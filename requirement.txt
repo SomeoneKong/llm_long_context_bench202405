@@ -1,14 +1,11 @@
 socksio
+aiohttp
 tiktoken
 openai
 google-generativeai
 anthropic
 qianfan
-dashscope
-spark_ai_python
 sensenova
 reka-api
-tencentcloud-sdk-python
 mistralai
 together
-volcengine-python-sdk[ark]

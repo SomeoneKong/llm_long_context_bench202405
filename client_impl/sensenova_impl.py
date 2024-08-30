@@ -59,6 +59,7 @@ class SenseNova_Client(llm_client_base.LlmClientBase):
             usage = {
                 'prompt_tokens': usage['prompt_tokens'],
                 'completion_tokens': usage['completion_tokens'],
+                'knowledge_tokens': usage['knowledge_tokens'],
             }
             choice0 = chunk['choices'][0]
             role = choice0['role']

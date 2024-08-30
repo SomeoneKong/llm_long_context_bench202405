@@ -37,6 +37,7 @@ class Baidu_Client(llm_client_base.LlmClientBase):
         resp = await chat_comp.ado(messages=message_list,
                                    system=system_prompt,
                                    temperature=temperature,
+                                   retry_count=0,
                                    stream=True,
                                    **args
                                    )

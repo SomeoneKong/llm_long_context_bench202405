@@ -9,3 +9,4 @@ sensenova
 reka-api
 mistralai
 together
+scipy

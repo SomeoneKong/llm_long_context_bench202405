@@ -20,6 +20,7 @@ class Baidu_Client(llm_client_base.LlmClientBase):
         super().__init__()
 
     async def chat_stream_async(self, model_name, history, model_param, client_param):
+        model_param = model_param.copy()
         temperature = model_param['temperature']
 
         system_message_list = [m for m in history if m['role'] == 'system']
@@ -27,12 +28,18 @@ class Baidu_Client(llm_client_base.LlmClientBase):
 
         message_list = [m for m in history if m['role'] != 'system']
 
+        args = {}
+        if 'max_tokens' in model_param:
+            args['max_output_tokens'] = min(2047, model_param['max_tokens'])
+
         start_time = time.time()
         chat_comp = qianfan.ChatCompletion(model=model_name)
         resp = await chat_comp.ado(messages=message_list,
                                    system=system_prompt,
                                    temperature=temperature,
-                                   stream=True
+                                   retry_count=0,
+                                   stream=True,
+                                   **args
                                    )
 
         result_buffer = ''

@@ -31,6 +31,7 @@ class Anthropic_Client(llm_client_base.LlmClientBase):
         )
 
     async def chat_stream_async(self, model_name, history, model_param, client_param):
+        model_param = model_param.copy()
         temperature = model_param['temperature']
 
         system_message_list = [m for m in history if m['role'] == 'system']

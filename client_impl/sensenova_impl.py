@@ -27,7 +27,12 @@ class SenseNova_Client(llm_client_base.LlmClientBase):
         sensenova.secret_access_key = secret_access_key
 
     async def chat_stream_async(self, model_name, history, model_param, client_param):
+        model_param = model_param.copy()
         temperature = model_param['temperature']
+
+        args = {}
+        if 'max_tokens' in model_param:
+            args['max_new_tokens'] = min(3072, model_param['max_tokens'])
 
         start_time = time.time()
         response = await sensenova.ChatCompletion.acreate(
@@ -35,7 +40,7 @@ class SenseNova_Client(llm_client_base.LlmClientBase):
             messages=history,
             temperature=temperature,
             stream=True,
-            max_new_tokens=2047,
+            **args
         )
 
         result_buffer = ''
@@ -54,6 +59,7 @@ class SenseNova_Client(llm_client_base.LlmClientBase):
             usage = {
                 'prompt_tokens': usage['prompt_tokens'],
                 'completion_tokens': usage['completion_tokens'],
+                'knowledge_tokens': usage['knowledge_tokens'],
             }
             choice0 = chunk['choices'][0]
             role = choice0['role']

@@ -1,89 +1,25 @@
 
 
 import os
-import time
 
 import llm_client_base
 
-# pip install "volcengine-python-sdk[ark]"
-from volcenginesdkarkruntime import AsyncArk
+from .openai_impl import OpenAI_Client
 
 # config from .env
-# VOLC_ACCESSKEY
-# VOLC_SECRETKEY
+# VOLC_API_KEY
 
 
-class ByteDance_Client(llm_client_base.LlmClientBase):
+class ByteDance_Client(OpenAI_Client):
     support_system_message: bool = True
 
     def __init__(self):
-        super().__init__()
-        ak = os.getenv('VOLC_ACCESSKEY')
-        sk = os.getenv('VOLC_SECRETKEY')
-        assert ak is not None
-        self.client = AsyncArk(ak=ak, sk=sk)
+        api_key = os.getenv('VOLC_API_KEY')
 
-    async def close(self):
-        await self.client._client.aclose()
-
-    async def chat_stream_async(self, model_name, history, model_param, client_param):
-        temperature = model_param['temperature']
-
-        start_time = time.time()
-
-        resp = await self.client.chat.completions.create(
-            model=model_name,
-            messages=history,
-            temperature=temperature,
-            stream=True,
-            stream_options={'include_usage': True},
+        super().__init__(
+            api_base_url="https://ark.cn-beijing.volces.com/api/v3/",
+            api_key=api_key,
         )
-
-        result_buffer = ''
-        usage = None
-        role = None
-        real_model_name = None
-        finish_reason = None
-        first_token_time = None
-
-        async for chunk in resp:
-            if chunk.usage:
-                usage = {
-                    'prompt_tokens': chunk.usage.prompt_tokens,
-                    'completion_tokens': chunk.usage.completion_tokens,
-                }
-
-            if chunk.choices:
-                choice0 = chunk.choices[0]
-                result_buffer += choice0.delta.content
-                role = choice0.delta.role
-                if choice0.finish_reason:
-                    finish_reason = choice0.finish_reason
-                if chunk.model:
-                    real_model_name = chunk.model
-
-                if choice0.delta.content and first_token_time is None:
-                    first_token_time = time.time()
-
-                yield {
-                    'role': role,
-                    'delta_content': choice0.delta.content,
-                    'accumulated_content': result_buffer,
-                }
-
-        await resp.close()
-
-        completion_time = time.time()
-
-        yield {
-            'role': role,
-            'accumulated_content': result_buffer,
-            'finish_reason': finish_reason,
-            'usage': usage,
-            'first_token_time': first_token_time - start_time if first_token_time else None,
-            'completion_time': completion_time - start_time,
-            'model_name': real_model_name,
-        }
 
 
 if __name__ == '__main__':
@@ -91,7 +27,7 @@ if __name__ == '__main__':
     import os
 
     client = ByteDance_Client()
-    model_name = "ep-xxxxxxxxx"  # "Doubao-lite-128k"
+    model_name = "ep-xxxxxx"
     history = [{"role": "user", "content": "Hello, how are you?"}]
 
     model_param = {

@@ -1,10 +1,9 @@
 # llm_long_context_bench202405
 
-# 简介
+本项目中的LLM已经接近停止维护，请使用新的独立项目：
+[llm_client_wrapper](https://github.com/SomeoneKong/llm_client_wrapper)
 
-本项目包括两部分：
-* 各家LLM API SDK 的简单统一包装，未来会随着其他测试项目的需求而不断扩展。
-* 包括一个Long context能力和速度的测试方案。
+# 简介
 
 使用方式：
 * 在环境变量中配置各家的API key，具体变量名请参考`client_impl`中的具体实现
